@@ -1,0 +1,1343 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>مكتبة الكود - كتب البرمجة والقصص</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-primary: #0d0d0d;
+            --bg-secondary: #1a1a1a;
+            --fg-primary: #f0f0f0;
+            --fg-secondary: #888;
+            --accent: #c9a227;
+            --accent-light: #e8c547;
+            --success: #22c55e;
+            --danger: #ef4444;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        html, body {
+            font-family: 'Tajawal', sans-serif;
+            background: var(--bg-primary);
+            color: var(--fg-primary);
+            overflow-x: hidden;
+            min-height: 100vh;
+            scroll-behavior: smooth;
+        }
+        
+        h1, h2, h3, h4 {
+            font-family: 'Amiri', serif;
+        }
+        
+        .bg-pattern {
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(201, 162, 39, 0.08) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(201, 162, 39, 0.05) 0%, transparent 50%),
+                linear-gradient(180deg, #0d0d0d 0%, #151515 100%);
+            background-attachment: fixed;
+        }
+        
+        .book-cover {
+            aspect-ratio: 2/3;
+            position: relative;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 
+                0 4px 20px rgba(0, 0, 0, 0.5),
+                0 0 40px rgba(201, 162, 39, 0.1);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .book-cover:active {
+            transform: scale(0.98);
+        }
+        
+        .book-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .book-icon-overlay {
+            position: absolute;
+            bottom: 12px;
+            left: 12px;
+            width: 44px;
+            height: 44px;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(8px);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .book-category-tag {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            padding: 6px 12px;
+            background: rgba(201, 162, 39, 0.9);
+            color: #000;
+            font-size: 11px;
+            font-weight: 700;
+            border-radius: 4px;
+        }
+        
+        .btn-action {
+            background: linear-gradient(135deg, var(--accent) 0%, #a88520 100%);
+            color: #000;
+            font-weight: 700;
+            font-family: 'Tajawal', sans-serif;
+            border: none;
+            border-radius: 12px;
+            padding: 14px 24px;
+            font-size: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+        }
+        
+        .btn-action:active {
+            transform: scale(0.98);
+            opacity: 0.9;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--accent);
+            border: 2px solid var(--accent);
+        }
+        
+        .btn-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .btn-icon:active {
+            background: rgba(201, 162, 39, 0.2);
+        }
+        
+        .filter-chip {
+            padding: 10px 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            border-radius: 25px;
+            color: var(--fg-secondary);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+        }
+        
+        .filter-chip.active {
+            background: var(--accent);
+            color: #000;
+        }
+        
+        .books-scroll {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            padding: 0 16px;
+        }
+        
+        .book-item {
+            width: calc(50% - 8px);
+            margin-bottom: 20px;
+        }
+        
+        @media (min-width: 640px) {
+            .book-item {
+                width: calc(33.333% - 11px);
+            }
+        }
+        
+        @media (min-width: 1024px) {
+            .book-item {
+                width: calc(25% - 12px);
+            }
+        }
+        
+        .modal-full {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-primary);
+            z-index: 100;
+            overflow-y: auto;
+            transform: translateY(100%);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .modal-full.active {
+            transform: translateY(0);
+        }
+        
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 100;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        
+        .modal-overlay.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        
+        .bottom-sheet {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-secondary);
+            border-radius: 24px 24px 0 0;
+            padding: 24px 20px 40px;
+            z-index: 101;
+            transform: translateY(100%);
+            transition: transform 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .bottom-sheet.active {
+            transform: translateY(0);
+        }
+        
+        .sheet-handle {
+            width: 40px;
+            height: 4px;
+            background: #444;
+            border-radius: 2px;
+            margin: 0 auto 20px;
+        }
+        
+        input, select, textarea {
+            width: 100%;
+            padding: 14px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            color: var(--fg-primary);
+            font-family: 'Tajawal', sans-serif;
+            font-size: 15px;
+            transition: border-color 0.2s ease;
+        }
+        
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+        
+        input::placeholder {
+            color: var(--fg-secondary);
+        }
+        
+        .nav-tab {
+            flex: 1;
+            padding: 12px;
+            background: transparent;
+            border: none;
+            color: var(--fg-secondary);
+            font-size: 12px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: color 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .nav-tab.active {
+            color: var(--accent);
+        }
+        
+        .nav-tab svg {
+            width: 24px;
+            height: 24px;
+        }
+        
+        .toast-msg {
+            position: fixed;
+            bottom: 100px;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background: var(--bg-secondary);
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-size: 14px;
+            font-weight: 500;
+            opacity: 0;
+            transition: all 0.3s ease;
+            z-index: 200;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        .toast-msg.show {
+            opacity: 1;
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .animate-in {
+            animation: slideIn 0.4s ease forwards;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .stagger { animation-delay: calc(var(--i) * 0.05s); }
+        
+        ::-webkit-scrollbar {
+            width: 4px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: var(--accent);
+            border-radius: 2px;
+        }
+        
+        @media (prefers-reduced-motion: reduce) {
+            * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; }
+        }
+        
+        .icon-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 12px;
+        }
+        
+        .icon-btn {
+            aspect-ratio: 1;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: none;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+        
+        .icon-btn.selected {
+            background: var(--accent);
+        }
+        
+        .icon-btn svg {
+            width: 24px;
+            height: 24px;
+            color: #aaa;
+        }
+        
+        .icon-btn.selected svg {
+            color: #000;
+        }
+        
+        .book-detail-cover {
+            width: 180px;
+            margin: 0 auto;
+            aspect-ratio: 2/3;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+        }
+        
+        .book-detail-cover img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .admin-book-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            margin-bottom: 8px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 12px;
+        }
+        
+        .admin-book-row.selected {
+            background: rgba(201, 162, 39, 0.15);
+        }
+        
+        .checkbox-box {
+            width: 22px;
+            height: 22px;
+            border: 2px solid #444;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .checkbox-box.checked {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+        
+        .progress-bar {
+            width: 120px;
+            height: 120px;
+        }
+        
+        .progress-bar circle {
+            fill: none;
+            stroke-width: 8;
+            transform: rotate(-90deg);
+            transform-origin: center;
+        }
+        
+        .progress-bar .bg {
+            stroke: #333;
+        }
+        
+        .progress-bar .fg {
+            stroke: var(--accent);
+            stroke-dasharray: 314;
+            stroke-dashoffset: 314;
+            transition: stroke-dashoffset 0.1s linear;
+        }
+    </style>
+</head>
+<body class="bg-pattern">
+    <!-- Header -->
+    <header class="sticky top-0 z-50 px-4 py-4" style="background: rgba(13, 13, 13, 0.95); backdrop-filter: blur(10px);">
+        <div class="flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl flex items-center justify-center" style="background: linear-gradient(135deg, #c9a227 0%, #a88520 100%);">
+                    <svg class="w-5 h-5" fill="#000" viewBox="0 0 24 24">
+                        <path d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3 3-1.34 3-3-1.34-3-3-3z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold">مكتبة الكود</h1>
+                    <p class="text-xs" style="color: var(--fg-secondary);">كتب البرمجة والقصص</p>
+                </div>
+            </div>
+            <div class="flex gap-2">
+                <button class="btn-icon" onclick="showSearch()">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main id="main-view" class="pb-24">
+        <!-- Categories -->
+        <section class="px-4 py-4">
+            <div class="flex gap-2 overflow-x-auto pb-2" id="category-scroll" style="scrollbar-width: none; -ms-overflow-style: none;">
+                <button class="filter-chip active" data-cat="all">الكل</button>
+                <button class="filter-chip" data-cat="programming">برمجة</button>
+                <button class="filter-chip" data-cat="stories">قصص</button>
+                <button class="filter-chip" data-cat="ai">ذكاء اصطناعي</button>
+                <button class="filter-chip" data-cat="python">بايثون</button>
+                <button class="filter-chip" data-cat="javascript">جافاسكريبت</button>
+            </div>
+        </section>
+
+        <!-- Books Grid -->
+        <section id="books-grid" class="books-scroll">
+            <!-- Books rendered here -->
+        </section>
+        
+        <!-- Empty State -->
+        <div id="empty-state" class="hidden text-center py-20 px-4">
+            <svg class="w-16 h-16 mx-auto mb-4" style="color: var(--fg-secondary)" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6.042A8.967 8.967 0 006 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 016 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 016-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0018 18a8.967 8.967 0 00-6 2.292m0-14.25v14.25"/>
+            </svg>
+            <p style="color: var(--fg-secondary)">مفيش كتب هنا دلوقتي</p>
+        </div>
+    </main>
+
+    <!-- Bottom Navigation -->
+    <nav class="fixed bottom-0 left-0 right-0 z-50 flex" style="background: rgba(26, 26, 26, 0.98); backdrop-filter: blur(10px); border-top: 1px solid rgba(255, 255, 255, 0.05);">
+        <button class="nav-tab active" data-view="home">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
+            </svg>
+            <span>الرئيسية</span>
+        </button>
+        <button class="nav-tab" data-view="categories">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+            </svg>
+            <span>الأقسام</span>
+        </button>
+        <button class="nav-tab" data-view="favorites">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+            </svg>
+            <span>المفضلة</span>
+        </button>
+        <button class="nav-tab" onclick="openAdminLogin()">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+            </svg>
+            <span>الإدارة</span>
+        </button>
+    </nav>
+
+    <!-- Book Detail Modal -->
+    <div id="book-detail-modal" class="modal-full">
+        <div class="sticky top-0 z-10 flex items-center gap-4 p-4" style="background: rgba(13, 13, 13, 0.98);">
+            <button onclick="closeBookDetail()" class="btn-icon">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+            <h2 class="text-lg font-bold flex-1">تفاصيل الكتاب</h2>
+            <button class="btn-icon" onclick="shareBook()">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.368 2.684 3 3 0 00-5.368-2.684z"/>
+                </svg>
+            </button>
+        </div>
+        
+        <div id="book-detail-content" class="px-4 pb-32">
+            <!-- Content rendered here -->
+        </div>
+    </div>
+
+    <!-- Admin Login Modal -->
+    <div id="admin-login-modal" class="modal-overlay">
+        <div class="min-h-screen flex items-center justify-center p-4">
+            <div class="w-full max-w-sm p-6 rounded-2xl" style="background: var(--bg-secondary);">
+                <h2 class="text-xl font-bold mb-2 text-center">دخول لوحة الإدارة</h2>
+                <p class="text-sm mb-6 text-center" style="color: var(--fg-secondary);">اكتب كلمة السر للدخول</p>
+                
+                <input type="password" id="admin-password" placeholder="كلمة السر" class="mb-4">
+                <button onclick="verifyAdmin()" class="btn-action mb-3">دخول</button>
+                <button onclick="closeAdminLogin()" class="btn-action btn-secondary">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Panel Modal -->
+    <div id="admin-panel-modal" class="modal-full">
+        <div class="sticky top-0 z-10 flex items-center gap-4 p-4" style="background: rgba(13, 13, 13, 0.98);">
+            <button onclick="closeAdminPanel()" class="btn-icon">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+            <h2 class="text-lg font-bold flex-1">لوحة الإدارة</h2>
+        </div>
+        
+        <div class="px-4 pb-32">
+            <!-- Add Book Form -->
+            <section class="py-6">
+                <h3 class="text-lg font-bold mb-4">إضافة كتاب جديد</h3>
+                
+                <div class="space-y-4">
+                    <input type="text" id="new-title" placeholder="عنوان الكتاب">
+                    <input type="text" id="new-author" placeholder="اسم المؤلف">
+                    
+                    <select id="new-category" onchange="updateSubcats()">
+                        <option value="">اختر القسم</option>
+                        <option value="programming">برمجة</option>
+                        <option value="stories">قصص</option>
+                    </select>
+                    
+                    <select id="new-subcategory">
+                        <option value="">اختر القسم الفرعي</option>
+                    </select>
+                    
+                    <div>
+                        <p class="text-sm mb-2" style="color: var(--fg-secondary);">أيقونة الكتاب</p>
+                        <div class="icon-grid" id="icon-picker"></div>
+                    </div>
+                    
+                    <input type="url" id="new-cover" placeholder="رابط صورة الغلاف">
+                    <textarea id="new-description" rows="3" placeholder="وصف الكتاب"></textarea>
+                    <input type="url" id="new-download" placeholder="رابط التحميل">
+                    <input type="url" id="new-facebook" placeholder="رابط صفحة فيسبوك">
+                    
+                    <button onclick="addNewBook()" class="btn-action">إضافة الكتاب</button>
+                </div>
+            </section>
+            
+            <!-- My Books List -->
+            <section class="py-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-bold">كتبي المضافة</h3>
+                    <button id="delete-selected" class="hidden px-4 py-2 rounded-lg text-sm font-medium" style="background: rgba(239, 68, 68, 0.2); color: #ef4444;" onclick="deleteSelectedBooks()">
+                        حذف المحدد
+                    </button>
+                </div>
+                
+                <div id="admin-books-list">
+                    <!-- Books list rendered here -->
+                </div>
+                
+                <div id="admin-empty" class="hidden text-center py-12">
+                    <p style="color: var(--fg-secondary);">لم تضف أي كتب بعد</p>
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <!-- Edit Book Bottom Sheet -->
+    <div id="edit-sheet" class="bottom-sheet">
+        <div class="sheet-handle"></div>
+        <h3 class="text-lg font-bold mb-4">تعديل الكتاب</h3>
+        
+        <div class="space-y-4">
+            <input type="hidden" id="edit-id">
+            <input type="text" id="edit-title" placeholder="عنوان الكتاب">
+            <input type="text" id="edit-author" placeholder="اسم المؤلف">
+            <input type="url" id="edit-download" placeholder="رابط التحميل">
+            <input type="url" id="edit-facebook" placeholder="رابط صفحة فيسبوك">
+            
+            <div class="flex gap-3">
+                <button onclick="saveEditBook()" class="btn-action flex-1">حفظ التعديلات</button>
+                <button onclick="closeEditSheet()" class="btn-action btn-secondary flex-1">إلغاء</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Download Bottom Sheet -->
+    <div id="download-sheet" class="bottom-sheet">
+        <div class="sheet-handle"></div>
+        
+        <div id="download-step-1" class="text-center">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style="background: rgba(201, 162, 39, 0.15);">
+                <svg class="w-8 h-8" style="color: var(--accent)" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold mb-2">تابعنا على فيسبوك</h3>
+            <p class="text-sm mb-6" style="color: var(--fg-secondary);">اضغط عشان تتابع صفحتنا وتكمل التحميل</p>
+            <a id="fb-link-btn" href="#" target="_blank" class="btn-action inline-block">متابعة الصفحة</a>
+            <p class="text-xs mt-4" style="color: var(--fg-secondary);">بعد المتابعة ارجع واضغط تاني</p>
+        </div>
+        
+        <div id="download-step-2" class="text-center hidden">
+            <div class="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style="background: rgba(34, 197, 94, 0.15);">
+                <svg class="w-8 h-8" style="color: #22c55e" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M5 13l4 4L19 7"/>
+                </svg>
+            </div>
+            <h3 class="text-lg font-bold mb-2">شكراً لمتابعتك!</h3>
+            <p class="text-sm mb-6" style="color: var(--fg-secondary);">التحميل هيبدأ بعد رسالة قصيرة</p>
+            <button onclick="startAdTimer()" class="btn-action">كمل التحميل</button>
+        </div>
+        
+        <div id="download-step-3" class="text-center hidden">
+            <svg class="progress-bar mx-auto mb-4" viewBox="0 0 120 120">
+                <circle class="bg" cx="60" cy="60" r="50"/>
+                <circle id="progress-circle" class="fg" cx="60" cy="60" r="50"/>
+            </svg>
+            <h3 class="text-lg font-bold mb-2">جاري التحميل...</h3>
+            <p id="countdown-text" class="text-sm" style="color: var(--fg-secondary);">استنى 5 ثواني...</p>
+        </div>
+    </div>
+
+    <!-- Search Modal -->
+    <div id="search-modal" class="modal-full">
+        <div class="sticky top-0 z-10 flex items-center gap-3 p-4" style="background: rgba(13, 13, 13, 0.98);">
+            <button onclick="closeSearch()" class="btn-icon">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/>
+                </svg>
+            </button>
+            <input type="text" id="search-input" placeholder="ابحث عن كتاب..." class="flex-1" oninput="searchBooks(this.value)">
+        </div>
+        
+        <div id="search-results" class="books-scroll pb-24">
+            <!-- Results rendered here -->
+        </div>
+    </div>
+
+    <!-- Toast -->
+    <div id="toast" class="toast-msg"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-app.js";
+        import { getDatabase, ref, set, push, onValue, remove, update } from "https://www.gstatic.com/firebasejs/10.7.0/firebase-database.js";
+        
+        const firebaseConfig = {
+            apiKey: "AIzaSyAjE-2q6PONBkCin9ZN22gDp9Q8pAH9ZW8",
+            authDomain: "story-97cf7.firebaseapp.com",
+            databaseURL: "https://story-97cf7-default-rtdb.firebaseio.com",
+            projectId: "story-97cf7",
+            storageBucket: "story-97cf7.firebasestorage.app",
+            messagingSenderId: "742801388214",
+            appId: "1:742801388214:web:32a305a8057b0582c5ec17"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const database = getDatabase(app);
+        
+        window.fbDb = database;
+        window.fbRef = ref;
+        window.fbPush = push;
+        window.fbSet = set;
+        window.fbOnValue = onValue;
+        window.fbRemove = remove;
+        window.fbUpdate = update;
+        
+        initApp();
+    </script>
+
+    <script>
+        // Book Icons
+        const bookIcons = [
+            { id: 'python', name: 'بايثون', path: 'M12 0C5.373 0 0 5.373 0 12s5.373 12 12 12 12-5.373 12-12S18.627 0 12 0zm-.5 4.5h1v3h-1v-3zm0 6h1v6h-1v-6z' },
+            { id: 'js', name: 'جافاسكريبت', path: 'M0 0h24v24H0V0zm22.034 18.276c-.175-1.095-.888-2.015-3.003-2.873-.736-.345-1.554-.585-1.797-1.14-.091-.33-.105-.51-.046-.705.15-.646.915-.84 1.515-.66.39.12.75.42.976.9 1.034-.676 1.034-.676 1.755-1.125-.27-.42-.404-.601-.586-.78-.63-.705-1.469-1.065-2.834-1.034l-.705.089c-.676.165-1.32.525-1.71 1.005-1.14 1.291-.811 3.541.569 4.471 1.365 1.02 3.361 1.244 3.616 2.205.24 1.17-.87 1.545-1.966 1.41-.811-.18-1.26-.586-1.755-1.336l-1.83 1.051c.21.48.45.689.81 1.109 1.74 1.756 6.09 1.666 6.871-1.004z' },
+            { id: 'html', name: 'HTML', path: 'M1.5 0h21l-1.91 21.563L11.977 24l-8.565-2.438L1.5 0zm7.031 9.75l-.232-2.718 10.059.003.23-2.622L5.412 4.41l.698 8.01h9.126l-.326 3.426-2.91.804-2.955-.81-.188-2.11H6.248l.33 4.171L12 19.351l5.379-1.443.744-8.157H8.531z' },
+            { id: 'css', name: 'CSS', path: 'M1.5 0h21l-1.91 21.563L11.977 24l-8.564-2.438L1.5 0zm17.09 4.413L5.41 4.41l.213 2.622 10.125.002-.255 2.716h-6.64l.24 2.573h6.182l-.366 3.523-2.91.804-2.956-.81-.188-2.11h-2.61l.29 3.855L12 19.288l5.373-1.53L18.59 4.413z' },
+            { id: 'ai', name: 'ذكاء اصطناعي', path: 'M12 2a2 2 0 012 2c0 .74-.4 1.39-1 1.73V7h1a7 7 0 017 7h1a1 1 0 011 1v3a1 1 0 01-1 1h-1v1a2 2 0 01-2 2H5a2 2 0 01-2-2v-1H2a1 1 0 01-1-1v-3a1 1 0 011-1h1a7 7 0 017-7h1V5.73c-.6-.34-1-.99-1-1.73a2 2 0 012-2M7.5 13A2.5 2.5 0 005 15.5 2.5 2.5 0 007.5 18a2.5 2.5 0 002.5-2.5A2.5 2.5 0 007.5 13m9 0a2.5 2.5 0 00-2.5 2.5 2.5 2.5 0 002.5 2.5 2.5 2.5 0 002.5-2.5 2.5 2.5 0 00-2.5-2.5z' },
+            { id: 'data', name: 'بيانات', path: 'M12 3C7.58 3 4 4.79 4 7v10c0 2.21 3.59 4 8 4s8-1.79 8-4V7c0-2.21-3.59-4-8-4zm6 14c0 .5-2.13 2-6 2s-6-1.5-6-2v-2.23c1.61.78 3.72 1.23 6 1.23s4.39-.45 6-1.23V17zm0-5c0 .5-2.13 2-6 2s-6-1.5-6-2V9.77c1.61.78 3.72 1.23 6 1.23s4.39-.45 6-1.23V12z' },
+            { id: 'book', name: 'كتاب', path: 'M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z' },
+            { id: 'code', name: 'كود', path: 'M9.4 16.6L4.8 12l4.6-4.6L8 6l-6 6 6 6 1.4-1.4zm5.2 0l4.6-4.6-4.6-4.6L16 6l6 6-6 6-1.4-1.4z' },
+            { id: 'mobile', name: 'موبايل', path: 'M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z' },
+            { id: 'story', name: 'قصة', path: 'M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5c-1.73-4.39-6-7.5-11-7.5zM12 17c-2.76 0-5-2.24-5-5s2.24-5 5-5 5 2.24 5 5-2.24 5-5 5z' },
+            { id: 'web', name: 'ويب', path: 'M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9 2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39-1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41c2.93 1.19 5 4.06 5 7.41 0 2.08-.8 3.97-2.1 5.39z' },
+            { id: 'security', name: 'أمان', path: 'M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 10.99h7c-.53 4.12-3.28 7.79-7 8.94V12H5V6.3l7-3.11v8.8z' },
+            { id: 'game', name: 'ألعاب', path: 'M21 6H3c-1.1 0-2 .9-2 2v8c0 1.1.9 2 2 2h18c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-10 7H8v3H6v-3H3v-2h3V8h2v3h3v2zm4.5 2c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zm4-3c-.83 0-1.5-.67-1.5-1.5S18.67 9 19.5 9s1.5.67 1.5 1.5-.67 1.5-1.5 1.5z' },
+            { id: 'network', name: 'شبكات', path: 'M15 20v-2h2v-2H4V4H2v12c0 1.1.9 2 2 2h10v2H9v2h10v-2h-4zM6 4v8h10V4H6zm8 6H8V6h6v4z' },
+            { id: 'algorithm', name: 'خوارزميات', path: 'M19 3H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-5 14H7v-2h7v2zm3-4H7v-2h10v2zm0-4H7V7h10v2z' }
+        ];
+        
+        // Subcategories
+        const subcats = {
+            programming: ['بايثون', 'جافاسكريبت', 'HTML', 'CSS', 'تايب سكريبت', 'ريأكت', 'نود جي إس', 'أساسيات الذكاء الاصطناعي', 'تعلم الآلة', 'تحليل البيانات', 'مفاهيم البرمجة', 'الخوارزميات', 'قواعد البيانات', 'ديف أوبس'],
+            stories: ['خيال', 'واقعي', 'فانتازيا', 'خيال علمي', 'غموض', 'رومانسي', 'إثارة', 'سيرة ذاتية', 'تطوير ذات', 'مغامرات']
+        };
+        
+        // State
+        let books = [];
+        let selectedBooks = new Set();
+        let currentCategory = 'all';
+        let currentBook = null;
+        let selectedIcon = 'book';
+        let downloadStep = 1;
+        
+        // Initialize
+        function initApp() {
+            loadBooks();
+            renderIconPicker();
+            setupListeners();
+        }
+        
+        function loadBooks() {
+            if (!window.fbDb) return;
+            
+            const booksRef = window.fbRef(window.fbDb, 'books');
+            window.fbOnValue(booksRef, (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    books = Object.entries(data).map(([id, book]) => ({ id, ...book }));
+                } else {
+                    books = [];
+                }
+                renderBooks();
+                renderAdminBooks();
+            });
+        }
+        
+        function setupListeners() {
+            // Category filters
+            document.querySelectorAll('[data-cat]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('[data-cat]').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                    currentCategory = btn.dataset.cat;
+                    renderBooks();
+                });
+            });
+            
+            // Bottom nav
+            document.querySelectorAll('.nav-tab[data-view]').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    document.querySelectorAll('.nav-tab').forEach(b => b.classList.remove('active'));
+                    btn.classList.add('active');
+                });
+            });
+        }
+        
+        function renderBooks() {
+            const grid = document.getElementById('books-grid');
+            const empty = document.getElementById('empty-state');
+            
+            let filtered = books;
+            
+            if (currentCategory !== 'all') {
+                filtered = filtered.filter(b => 
+                    b.category === currentCategory || 
+                    b.subcategory?.toLowerCase().includes(currentCategory.toLowerCase())
+                );
+            }
+            
+            if (filtered.length === 0) {
+                grid.innerHTML = '';
+                empty.classList.remove('hidden');
+                return;
+            }
+            
+            empty.classList.add('hidden');
+            
+            grid.innerHTML = filtered.map((book, i) => {
+                const icon = bookIcons.find(ic => ic.id === book.icon) || bookIcons.find(ic => ic.id === 'book');
+                const coverUrl = book.cover || generateCover(book.title, icon);
+                
+                return `
+                    <div class="book-item animate-in stagger" style="--i: ${i}" onclick="openBookDetail('${book.id}')">
+                        <div class="book-cover">
+                            <img src="${coverUrl}" alt="${book.title}" loading="lazy" onerror="this.src='${generateCover(book.title, icon)}'">
+                            <span class="book-category-tag">${book.subcategory || (book.category === 'programming' ? 'برمجة' : 'قصة')}</span>
+                            <div class="book-icon-overlay">
+                                <svg viewBox="0 0 24 24" fill="currentColor" style="color: var(--accent); width: 24px; height: 24px;">
+                                    <path d="${icon.path}"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <h3 class="font-bold text-sm line-clamp-2 mb-1">${book.title}</h3>
+                            <p class="text-xs" style="color: var(--fg-secondary)">${book.author}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function generateCover(title, icon) {
+            const canvas = document.createElement('canvas');
+            canvas.width = 300;
+            canvas.height = 450;
+            const ctx = canvas.getContext('2d');
+            
+            // Background gradient
+            const grad = ctx.createLinearGradient(0, 0, 300, 450);
+            grad.addColorStop(0, '#1a1a2e');
+            grad.addColorStop(0.5, '#16213e');
+            grad.addColorStop(1, '#0f0f23');
+            ctx.fillStyle = grad;
+            ctx.fillRect(0, 0, 300, 450);
+            
+            // Decorative elements
+            ctx.fillStyle = 'rgba(201, 162, 39, 0.1)';
+            ctx.beginPath();
+            ctx.arc(250, 50, 100, 0, Math.PI * 2);
+            ctx.fill();
+            
+            ctx.fillStyle = 'rgba(201, 162, 39, 0.05)';
+            ctx.beginPath();
+            ctx.arc(50, 400, 80, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Icon
+            ctx.fillStyle = '#c9a227';
+            ctx.font = 'bold 60px Arial';
+            ctx.textAlign = 'center';
+            ctx.fillText('📚', 150, 200);
+            
+            // Title
+            ctx.fillStyle = '#f0f0f0';
+            ctx.font = 'bold 24px Amiri, serif';
+            ctx.textAlign = 'center';
+            
+            // Word wrap
+            const words = title.split(' ');
+            let lines = [];
+            let currentLine = '';
+            
+            words.forEach(word => {
+                const testLine = currentLine + word + ' ';
+                if (ctx.measureText(testLine).width > 260) {
+                    lines.push(currentLine.trim());
+                    currentLine = word + ' ';
+                } else {
+                    currentLine = testLine;
+                }
+            });
+            lines.push(currentLine.trim());
+            
+            lines.slice(0, 3).forEach((line, i) => {
+                ctx.fillText(line, 150, 300 + (i * 35));
+            });
+            
+            // Border
+            ctx.strokeStyle = 'rgba(201, 162, 39, 0.3)';
+            ctx.lineWidth = 3;
+            ctx.strokeRect(10, 10, 280, 430);
+            
+            return canvas.toDataURL('image/jpeg', 0.8);
+        }
+        
+        function renderIconPicker() {
+            const picker = document.getElementById('icon-picker');
+            picker.innerHTML = bookIcons.map(icon => `
+                <button type="button" class="icon-btn ${selectedIcon === icon.id ? 'selected' : ''}" onclick="pickIcon('${icon.id}')" title="${icon.name}">
+                    <svg viewBox="0 0 24 24" fill="currentColor">
+                        <path d="${icon.path}"/>
+                    </svg>
+                </button>
+            `).join('');
+        }
+        
+        window.pickIcon = function(id) {
+            selectedIcon = id;
+            renderIconPicker();
+        };
+        
+        window.updateSubcats = function() {
+            const cat = document.getElementById('new-category').value;
+            const subcatSelect = document.getElementById('new-subcategory');
+            
+            if (cat && subcats[cat]) {
+                subcatSelect.innerHTML = '<option value="">اختر القسم الفرعي</option>' +
+                    subcats[cat].map(s => `<option value="${s}">${s}</option>`).join('');
+            } else {
+                subcatSelect.innerHTML = '<option value="">اختر القسم الفرعي</option>';
+            }
+        };
+        
+        // Book Detail
+        window.openBookDetail = function(id) {
+            currentBook = books.find(b => b.id === id);
+            if (!currentBook) return;
+            
+            const icon = bookIcons.find(ic => ic.id === currentBook.icon) || bookIcons.find(ic => ic.id === 'book');
+            const coverUrl = currentBook.cover || generateCover(currentBook.title, icon);
+            
+            document.getElementById('book-detail-content').innerHTML = `
+                <div class="book-detail-cover mt-6 mb-6">
+                    <img src="${coverUrl}" alt="${currentBook.title}" onerror="this.src='${generateCover(currentBook.title, icon)}'">
+                </div>
+                
+                <div class="text-center mb-6">
+                    <h1 class="text-2xl font-bold mb-2">${currentBook.title}</h1>
+                    <p class="text-lg" style="color: var(--fg-secondary)">${currentBook.author}</p>
+                </div>
+                
+                <div class="flex justify-center gap-3 mb-6">
+                    <span class="px-4 py-2 rounded-lg text-sm" style="background: rgba(255,255,255,0.05);">${currentBook.category === 'programming' ? 'برمجة' : 'قصة'}</span>
+                    <span class="px-4 py-2 rounded-lg text-sm" style="background: rgba(255,255,255,0.05);">${currentBook.subcategory || 'عام'}</span>
+                </div>
+                
+                <div class="mb-8">
+                    <h3 class="font-bold mb-3">عن الكتاب</h3>
+                    <p class="leading-relaxed" style="color: var(--fg-secondary)">${currentBook.description || 'كتاب رائع يغطي مواضيع مهمة في مجاله، مناسب للمبتدئين والمحترفين على حد سواء.'}</p>
+                </div>
+                
+                <div class="mb-8">
+                    <h3 class="font-bold mb-3">معلومات إضافية</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between py-3" style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <span style="color: var(--fg-secondary)">القسم</span>
+                            <span>${currentBook.category === 'programming' ? 'برمجة' : 'قصص'}</span>
+                        </div>
+                        <div class="flex justify-between py-3" style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <span style="color: var(--fg-secondary)">القسم الفرعي</span>
+                            <span>${currentBook.subcategory || 'عام'}</span>
+                        </div>
+                        <div class="flex justify-between py-3" style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <span style="color: var(--fg-secondary)">المؤلف</span>
+                            <span>${currentBook.author}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <button onclick="startDownload()" class="btn-action flex items-center justify-center gap-3">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                    </svg>
+                    تحميل الكتاب
+                </button>
+            `;
+            
+            document.getElementById('book-detail-modal').classList.add('active');
+        };
+        
+        window.closeBookDetail = function() {
+            document.getElementById('book-detail-modal').classList.remove('active');
+        };
+        
+        // Share
+        window.shareBook = async function() {
+            if (!currentBook) return;
+            
+            const shareData = {
+                title: currentBook.title,
+                text: `كتاب ${currentBook.title} للمؤلف ${currentBook.author}`,
+                url: window.location.href
+            };
+            
+            try {
+                if (navigator.share) {
+                    await navigator.share(shareData);
+                    showToast('تم المشاركة بنجاح');
+                } else {
+                    await navigator.clipboard.writeText(window.location.href);
+                    showToast('تم نسخ الرابط');
+                }
+            } catch (err) {
+                await navigator.clipboard.writeText(window.location.href);
+                showToast('تم نسخ الرابط');
+            }
+        };
+        
+        // Download Flow
+        window.startDownload = function() {
+            if (!currentBook) return;
+            
+            downloadStep = 1;
+            document.getElementById('download-step-1').classList.remove('hidden');
+            document.getElementById('download-step-2').classList.add('hidden');
+            document.getElementById('download-step-3').classList.add('hidden');
+            document.getElementById('fb-link-btn').href = currentBook.facebookLink || '#';
+            document.getElementById('download-sheet').classList.add('active');
+        };
+        
+        window.closeDownloadSheet = function() {
+            document.getElementById('download-sheet').classList.remove('active');
+            
+            if (downloadStep === 1) {
+                downloadStep = 2;
+                document.getElementById('download-step-1').classList.add('hidden');
+                document.getElementById('download-step-2').classList.remove('hidden');
+            }
+        };
+        
+        window.startAdTimer = function() {
+            downloadStep = 3;
+            document.getElementById('download-step-1').classList.add('hidden');
+            document.getElementById('download-step-2').classList.add('hidden');
+            document.getElementById('download-step-3').classList.remove('hidden');
+            
+            let seconds = 5;
+            const circle = document.getElementById('progress-circle');
+            const text = document.getElementById('countdown-text');
+            
+            const interval = setInterval(() => {
+                seconds--;
+                text.textContent = `استنى ${seconds} ثواني...`;
+                
+                const offset = 314 - (314 * (5 - seconds) / 5);
+                circle.style.strokeDashoffset = 314 - offset;
+                
+                if (seconds <= 0) {
+                    clearInterval(interval);
+                    window.open(currentBook.downloadLink, '_blank');
+                    document.getElementById('download-sheet').classList.remove('active');
+                    showToast('تم بدء التحميل');
+                }
+            }, 1000);
+        };
+        
+        // Admin
+        window.openAdminLogin = function() {
+            document.getElementById('admin-login-modal').classList.add('active');
+        };
+        
+        window.closeAdminLogin = function() {
+            document.getElementById('admin-login-modal').classList.remove('active');
+            document.getElementById('admin-password').value = '';
+        };
+        
+        window.verifyAdmin = function() {
+            const password = document.getElementById('admin-password').value;
+            if (password === 'admin123' || password === 'Admin@123') {
+                closeAdminLogin();
+                document.getElementById('admin-panel-modal').classList.add('active');
+            } else {
+                showToast('كلمة السر غلط');
+            }
+        };
+        
+        window.closeAdminPanel = function() {
+            document.getElementById('admin-panel-modal').classList.remove('active');
+        };
+        
+        // Add Book
+        window.addNewBook = async function() {
+            const book = {
+                title: document.getElementById('new-title').value.trim(),
+                author: document.getElementById('new-author').value.trim(),
+                category: document.getElementById('new-category').value,
+                subcategory: document.getElementById('new-subcategory').value,
+                icon: selectedIcon,
+                cover: document.getElementById('new-cover').value.trim(),
+                description: document.getElementById('new-description').value.trim(),
+                downloadLink: document.getElementById('new-download').value.trim(),
+                facebookLink: document.getElementById('new-facebook').value.trim(),
+                createdAt: Date.now()
+            };
+            
+            if (!book.title || !book.author || !book.category || !book.downloadLink) {
+                showToast('اكمل البيانات المطلوبة');
+                return;
+            }
+            
+            if (window.fbDb) {
+                const booksRef = window.fbRef(window.fbDb, 'books');
+                await window.fbPush(booksRef, book);
+            } else {
+                book.id = 'local-' + Date.now();
+                books.push(book);
+                renderBooks();
+                renderAdminBooks();
+            }
+            
+            // Reset form
+            document.getElementById('new-title').value = '';
+            document.getElementById('new-author').value = '';
+            document.getElementById('new-category').value = '';
+            document.getElementById('new-subcategory').innerHTML = '<option value="">اختر القسم الفرعي</option>';
+            document.getElementById('new-cover').value = '';
+            document.getElementById('new-description').value = '';
+            document.getElementById('new-download').value = '';
+            document.getElementById('new-facebook').value = '';
+            selectedIcon = 'book';
+            renderIconPicker();
+            
+            showToast('تم إضافة الكتاب بنجاح');
+        };
+        
+        // Admin Books List
+        function renderAdminBooks() {
+            const list = document.getElementById('admin-books-list');
+            const empty = document.getElementById('admin-empty');
+            const deleteBtn = document.getElementById('delete-selected');
+            
+            if (books.length === 0) {
+                list.innerHTML = '';
+                empty.classList.remove('hidden');
+                deleteBtn.classList.add('hidden');
+                return;
+            }
+            
+            empty.classList.add('hidden');
+            deleteBtn.classList.toggle('hidden', selectedBooks.size === 0);
+            
+            list.innerHTML = books.map(book => {
+                const icon = bookIcons.find(ic => ic.id === book.icon) || bookIcons.find(ic => ic.id === 'book');
+                const isSelected = selectedBooks.has(book.id);
+                
+                return `
+                    <div class="admin-book-row ${isSelected ? 'selected' : ''}">
+                        <div class="checkbox-box ${isSelected ? 'checked' : ''}" onclick="toggleSelect('${book.id}')">
+                            ${isSelected ? '<svg class="w-4 h-4" fill="#000" viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z"/></svg>' : ''}
+                        </div>
+                        <div class="w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0" style="background: rgba(201, 162, 39, 0.15);">
+                            <svg viewBox="0 0 24 24" fill="currentColor" style="color: var(--accent); width: 20px; height: 20px;">
+                                <path d="${icon.path}"/>
+                            </svg>
+                        </div>
+                        <div class="flex-1 min-w-0">
+                            <p class="font-medium text-sm truncate">${book.title}</p>
+                            <p class="text-xs truncate" style="color: var(--fg-secondary)">${book.author}</p>
+                        </div>
+                        <button onclick="openEditSheet('${book.id}')" class="btn-icon" style="width: 36px; height: 36px;">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                            </svg>
+                        </button>
+                        <button onclick="deleteBook('${book.id}')" class="btn-icon" style="width: 36px; height: 36px;">
+                            <svg class="w-4 h-4" fill="none" stroke="#ef4444" stroke-width="2" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                        </button>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        window.toggleSelect = function(id) {
+            if (selectedBooks.has(id)) {
+                selectedBooks.delete(id);
+            } else {
+                selectedBooks.add(id);
+            }
+            renderAdminBooks();
+        };
+        
+        window.deleteSelectedBooks = async function() {
+            if (selectedBooks.size === 0) return;
+            
+            for (const id of selectedBooks) {
+                if (window.fbDb) {
+                    const bookRef = window.fbRef(window.fbDb, `books/${id}`);
+                    await window.fbRemove(bookRef);
+                }
+            }
+            
+            books = books.filter(b => !selectedBooks.has(b.id));
+            selectedBooks.clear();
+            renderBooks();
+            renderAdminBooks();
+            showToast('تم حذف الكتب المحددة');
+        };
+        
+        window.deleteBook = async function(id) {
+            if (!confirm('متأكد تحذف الكتاب ده؟')) return;
+            
+            if (window.fbDb) {
+                const bookRef = window.fbRef(window.fbDb, `books/${id}`);
+                await window.fbRemove(bookRef);
+            } else {
+                books = books.filter(b => b.id !== id);
+                renderBooks();
+                renderAdminBooks();
+            }
+            
+            showToast('تم حذف الكتاب');
+        };
+        
+        // Edit
+        window.openEditSheet = function(id) {
+            const book = books.find(b => b.id === id);
+            if (!book) return;
+            
+            document.getElementById('edit-id').value = id;
+            document.getElementById('edit-title').value = book.title;
+            document.getElementById('edit-author').value = book.author;
+            document.getElementById('edit-download').value = book.downloadLink || '';
+            document.getElementById('edit-facebook').value = book.facebookLink || '';
+            
+            document.getElementById('edit-sheet').classList.add('active');
+        };
+        
+        window.closeEditSheet = function() {
+            document.getElementById('edit-sheet').classList.remove('active');
+        };
+        
+        window.saveEditBook = async function() {
+            const id = document.getElementById('edit-id').value;
+            const updates = {
+                title: document.getElementById('edit-title').value.trim(),
+                author: document.getElementById('edit-author').value.trim(),
+                downloadLink: document.getElementById('edit-download').value.trim(),
+                facebookLink: document.getElementById('edit-facebook').value.trim()
+            };
+            
+            if (window.fbDb) {
+                const bookRef = window.fbRef(window.fbDb, `books/${id}`);
+                await window.fbUpdate(bookRef, updates);
+            } else {
+                const index = books.findIndex(b => b.id === id);
+                if (index !== -1) {
+                    books[index] = { ...books[index], ...updates };
+                    renderBooks();
+                    renderAdminBooks();
+                }
+            }
+            
+            closeEditSheet();
+            showToast('تم حفظ التعديلات');
+        };
+        
+        // Search
+        window.showSearch = function() {
+            document.getElementById('search-modal').classList.add('active');
+            document.getElementById('search-input').focus();
+        };
+        
+        window.closeSearch = function() {
+            document.getElementById('search-modal').classList.remove('active');
+            document.getElementById('search-input').value = '';
+        };
+        
+        window.searchBooks = function(query) {
+            const results = document.getElementById('search-results');
+            const q = query.toLowerCase().trim();
+            
+            if (!q) {
+                results.innerHTML = '<div class="text-center py-20" style="color: var(--fg-secondary)">اكتب اسم الكتاب أو المؤلف</div>';
+                return;
+            }
+            
+            const filtered = books.filter(b => 
+                b.title.toLowerCase().includes(q) || 
+                b.author.toLowerCase().includes(q)
+            );
+            
+            if (filtered.length === 0) {
+                results.innerHTML = '<div class="text-center py-20" style="color: var(--fg-secondary)">مفيش نتايج</div>';
+                return;
+            }
+            
+            results.innerHTML = filtered.map((book, i) => {
+                const icon = bookIcons.find(ic => ic.id === book.icon) || bookIcons.find(ic => ic.id === 'book');
+                const coverUrl = book.cover || generateCover(book.title, icon);
+                
+                return `
+                    <div class="book-item animate-in stagger" style="--i: ${i}" onclick="openBookFromSearch('${book.id}')">
+                        <div class="book-cover">
+                            <img src="${coverUrl}" alt="${book.title}" loading="lazy" onerror="this.src='${generateCover(book.title, icon)}'">
+                            <span class="book-category-tag">${book.subcategory || (book.category === 'programming' ? 'برمجة' : 'قصة')}</span>
+                            <div class="book-icon-overlay">
+                                <svg viewBox="0 0 24 24" fill="currentColor" style="color: var(--accent); width: 24px; height: 24px;">
+                                    <path d="${icon.path}"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="mt-3">
+                            <h3 class="font-bold text-sm line-clamp-2 mb-1">${book.title}</h3>
+                            <p class="text-xs" style="color: var(--fg-secondary)">${book.author}</p>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        };
+        
+        window.openBookFromSearch = function(id) {
+            closeSearch();
+            setTimeout(() => openBookDetail(id), 100);
+        };
+        
+        // Toast
+        function showToast(msg) {
+            const toast = document.getElementById('toast');
+            toast.textContent = msg;
+            toast.classList.add('show');
+            
+            setTimeout(() => {
+                toast.classList.remove('show');
+            }, 3000);
+        }
+    </script>
+</body>
+</html>
