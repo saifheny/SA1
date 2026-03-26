@@ -1,28 +1,13 @@
-<!-- ============================================================
-     مكتبتي | BookStore
-     ============================================================
-     A mobile-first, dark-themed Arabic digital bookstore platform.
-     - Built with HTML, CSS (style.css), and JavaScript (app.js).
-     - Uses Firebase Realtime Database for book storage.
-     - RTL (Right-to-Left) layout for Arabic language support.
-     - Features: book browsing, category filters, search, admin panel,
-       download flow with Facebook follow gate, social links,
-       privacy policy, terms of use, and about pages.
-     ============================================================ -->
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-    <!-- ====== META & SEO CONFIGURATION ====== -->
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>مكتبتي | BookStore</title>
     <meta name="description" content="مكتبة إلكترونية لتحميل كتب البرمجة والذكاء الاصطناعي والقصص مجاناً">
     <meta name="theme-color" content="#000000">
-    <meta name="mobile-web-app-capable" content="yes"> <!-- Enables PWA-like fullscreen mode -->
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"> <!-- iOS status bar style -->
-
-    <!-- ====== OPEN GRAPH / SOCIAL SHARING TAGS ======
-         These tags control how links appear when shared on Facebook, Twitter, etc. -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta property="og:title" content="مكتبتي | BookStore">
     <meta property="og:description" content="مكتبة إلكترونية لتحميل أفضل كتب البرمجة والذكاء الاصطناعي والقصص مجاناً">
     <meta property="og:image" content="https://images.unsplash.com/photo-1524578271613-d550eacf6090?w=1200&q=80">
@@ -35,33 +20,16 @@
     <meta name="twitter:description" content="مكتبة إلكترونية لتحميل أفضل كتب البرمجة والذكاء الاصطناعي والقصص مجاناً">
     <meta name="twitter:image" content="https://images.unsplash.com/photo-1524578271613-d550eacf6090?w=1200&q=80">
 
-    <!-- ====== FAVICON ======
-         SVG-based book icon used as the browser tab favicon -->
     <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 576 512%22><path fill=%22%23ffffff%22 d=%22M249.6 471.5c10.8 3.8 22.4-4.1 22.4-15.5V78.6c0-4.2-1.6-8.4-5-11C247.4 52 202.4 32 144 32C93.5 32 46.3 45.3 18.1 56.1C6.8 60.5 0 71.7 0 83.8V454.1c0 11.9 12.8 20.2 24.1 16.5C55.6 460.1 105.5 448 144 448c33.9 0 79 14 105.6 23.5zm76.8 0C353 462 398.1 448 432 448c38.5 0 88.4 12.1 119.9 22.6c11.3 3.8 24.1-4.6 24.1-16.5V83.8c0-12.1-6.8-23.3-18.1-27.6C529.7 45.3 482.5 32 432 32c-58.4 0-103.4 20-123 45.6c-3.3 2.6-5 6.8-5 11V456c0 11.4 11.7 19.3 22.4 15.5z%22/></svg>" type="image/svg+xml">
 
-    <!-- ====== EXTERNAL RESOURCES ====== -->
-    <link rel="preconnect" href="https://fonts.googleapis.com"> <!-- Pre-connect to speed up font loading -->
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet"> <!-- Cairo Arabic font -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"> <!-- Font Awesome icons library -->
-    <link rel="stylesheet" href="style.css"> <!-- Main stylesheet -->
-</head>
+    <link rel="preconnect" href="https://fonts.googleapis.com"> <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"> <link rel="stylesheet" href="style.css"> </head>
 <body>
-    <!-- ====== BACKGROUND PARTICLES ======
-         Canvas element for animated floating particles background effect.
-         Rendered by initParticles() in app.js -->
     <canvas id="particlesCanvas"></canvas>
 
-    <!-- ====== TOAST NOTIFICATION ======
-         Global toast popup used for success/error messages.
-         Controlled by showToast() in app.js -->
     <div id="toast" class="toast"></div>
     <main id="app">
 
-        <!-- ====== HEADER ======
-             Sticky top header with logo and search.
-             - Logo: Triple-tap opens the hidden admin panel.
-             - Search: Toggle search bar to filter books by title/author/description. -->
         <header id="mainHeader" class="app-header">
             <div class="header-content">
                 <div class="logo" id="logoArea">
@@ -83,12 +51,6 @@
             </div>
         </header>
 
-        <!-- ====== HOME VIEW ======
-             Main landing page showing:
-             - Hero banner with background image and welcome text
-             - Category filter pills (All, Programming, AI, Stories, General)
-             - Books grid (2-column layout) populated dynamically from Firebase
-             - Empty state message when no books exist -->
         <section id="homeView" class="view active">
             <div class="hero-section">
                 <div class="hero-bg-image"></div>
@@ -122,14 +84,6 @@
             </div>
         </section>
 
-        <!-- ====== BOOK DETAIL VIEW ======
-             Shows full details for a selected book:
-             - 3D animated book cover with icon and title
-             - Book title, author, category, subcategory tags
-             - Full description
-             - Download and Share action buttons
-             - Unique shareable link with copy button
-             Content is dynamically generated by showBookDetail() in app.js -->
         <section id="bookDetailView" class="view">
             <button id="backBtn" class="back-btn">
                 <i class="fas fa-arrow-right"></i> رجوع
@@ -137,13 +91,6 @@
             <div id="bookDetailContent" class="book-detail-content"></div>
         </section>
 
-        <!-- ====== ADMIN VIEW ======
-             Hidden admin panel (accessed by triple-tapping the logo).
-             Contains:
-             1. Social Links Settings - Configure Facebook, LinkedIn, Reddit, GitHub URLs
-             2. Add Book Tab - Form to add/edit books (title, author, description, link,
-                category, subcategory, cover color, icon)
-             3. My Books Tab - List of all books with edit/delete/bulk-select options -->
         <section id="adminView" class="view">
             <div class="admin-header">
                 <button id="adminBackBtn" class="back-btn">
@@ -154,10 +101,6 @@
                 </h2>
             </div>
 
-            <!-- Social Links Settings
-                 Each row: platform icon + URL input + save button.
-                 Values are stored in Firebase under 'settings/' path.
-                 Updated links appear in footer and about page automatically. -->
             <div class="global-fb-setting">
                 <label><i class="fas fa-share-nodes"></i> روابط التواصل الاجتماعي</label>
                 <div class="social-link-row">
@@ -277,13 +220,6 @@
             </div>
         </section>
 
-        <!-- ====== ICON PICKER MODAL ======
-             Modal dialog for selecting a Font Awesome icon for book covers.
-             Features:
-             - Search input to filter icons by name
-             - Category tabs (All, Programming, AI, Books, Science, Design, Misc)
-             - Grid of clickable icons
-             Triggered from the admin "Add Book" form -->
         <div id="iconPickerModal" class="modal hidden">
             <div class="modal-overlay"></div>
             <div class="modal-content icon-picker-content">
@@ -308,18 +244,11 @@
             </div>
         </div>
 
-        <!-- ====== DOWNLOAD VIEW ======
-             Multi-step download flow:
-             Step 1: Prompt user to follow Facebook page (shows follow button)
-             Step 2: Loading spinner (5-second silent countdown)
-             Step 3: Download complete (auto-opens download link in new tab)
-             Only one step is visible at a time via .download-step.active class -->
         <section id="downloadView" class="view">
             <button id="downloadBackBtn" class="back-btn">
                 <i class="fas fa-arrow-right"></i> رجوع
             </button>
             <div class="download-page-content">
-                <!-- Step 1: Follow Facebook - User must click to follow before download begins -->
                 <div id="downloadStep1" class="download-step active">
                     <div class="download-icon-wrap fb-icon-wrap">
                         <i class="fab fa-facebook-f"></i>
@@ -330,7 +259,6 @@
                         <i class="fab fa-facebook-f"></i> متابعة الصفحة
                     </a>
                 </div>
-                <!-- Step 2: Loading spinner - 5 second wait before auto-download starts -->
                 <div id="downloadStep2" class="download-step">
                     <div class="download-icon-wrap">
                         <i class="fas fa-spinner fa-spin"></i>
@@ -351,10 +279,6 @@
             </div>
         </section>
 
-        <!-- ====== PRIVACY POLICY PAGE ======
-             Static page explaining data collection, cookies, external links,
-             download links, policy updates, and contact information.
-             Uses styled info-section blocks with colored left borders. -->
         <section id="privacyPolicyView" class="view">
             <button id="privacyBackBtn" class="back-btn">
                 <i class="fas fa-arrow-right"></i> رجوع
@@ -418,14 +342,6 @@
             </div>
         </section>
 
-        <!-- ====== HOW TO USE PAGE ======
-             Step-by-step usage guide with numbered steps:
-             1. Home page overview
-             2. Category filtering
-             3. Search functionality
-             4. Book details
-             5. Downloading books
-             6. Sharing books -->
         <section id="howToUseView" class="view">
             <button id="howToUseBackBtn" class="back-btn">
                 <i class="fas fa-arrow-right"></i> رجوع
@@ -491,9 +407,6 @@
             </div>
         </section>
 
-        <!-- ====== TERMS OF USE PAGE ======
-             Terms and conditions covering: acceptance, permitted use,
-             prohibited use, intellectual property, disclaimer, and amendments. -->
         <section id="termsView" class="view">
             <button id="termsBackBtn" class="back-btn">
                 <i class="fas fa-arrow-right"></i> رجوع
@@ -568,9 +481,6 @@
             </div>
         </section>
 
-        <!-- ====== ABOUT PAGE ======
-             Information about the platform: mission, offerings (programming,
-             AI, stories, general books), vision, and social media links. -->
         <section id="aboutView" class="view">
             <button id="aboutBackBtn" class="back-btn">
                 <i class="fas fa-arrow-right"></i> رجوع
@@ -629,10 +539,6 @@
             </div>
         </section>
 
-        <!-- ====== CONFIRM DELETE MODAL ======
-             Confirmation dialog shown before deleting book(s).
-             Has "Yes, delete" (danger) and "No, go back" (outline) buttons.
-             Triggered from My Books tab in admin panel. -->
         <div id="confirmDeleteModal" class="modal hidden">
             <div class="modal-overlay"></div>
             <div class="modal-content confirm-modal-content">
@@ -654,12 +560,6 @@
 
     </main>
 
-    <!-- ====== FOOTER ======
-         Site footer containing:
-         - Navigation links (Privacy, How to Use, Terms, About)
-         - Social media icon buttons (Facebook, LinkedIn, Reddit, GitHub)
-         - Copyright notice
-         Social links are dynamically updated from Firebase settings by updateSocialLinks() -->
     <footer class="app-footer">
         <div class="footer-links">
             <a href="#privacyPolicy">سياسة الخصوصية</a>
@@ -684,10 +584,6 @@
         <p>© 2026 مكتبتي - كل الحقوق محفوظة</p>
     </footer>
 
-    <!-- ====== MAIN APPLICATION SCRIPT ======
-         Loaded as ES module. Contains all app logic:
-         Firebase initialization, routing, book CRUD, particles, search,
-         download flow, admin panel, and social links management. -->
     <script type="module" src="app.js"></script>
 </body>
 </html>
