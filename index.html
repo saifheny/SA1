@@ -208,55 +208,84 @@
                 <div class="icon-grid" id="iconGrid"></div>
             </div>
         </div>
+        <section id="privacyView" class="view">
+            <button class="view-back-btn back-btn">
+                <i class="fas fa-arrow-right"></i> رجوع
+            </button>
+            <div class="page-content">
+                <div class="page-header">
+                    <i class="fas fa-user-shield page-icon"></i>
+                    <h2 class="animate-text">سياسة الخصوصية</h2>
+                </div>
+                <div class="text-content animate-text delay-1">
+                    <h3>1. جمع المعلومات</h3>
+                    <p>نحن لا نقوم بجمع أي معلومات شخصية غير ضرورية. المعلومات الوحيدة التي قد نطلبها هي اللازمة لتحسين تجربتك.</p>
+                    
+                    <h3>2. استخدام البيانات</h3>
+                    <p>بيانات التصفح (إن وجدت) تستخدم فقط لتقديم محتوى أفضل ومعرفة الكتب الأكثر شعبية.</p>
+
+                    <h3>3. مشاركة البيانات</h3>
+                    <p>مفيش أي بيانات بنشاركها مع أطراف تالتة. كل حاجة محفوظة بأمان كامل.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="termsView" class="view">
+            <button class="view-back-btn back-btn">
+                <i class="fas fa-arrow-right"></i> رجوع
+            </button>
+            <div class="page-content">
+                <div class="page-header">
+                    <i class="fas fa-file-contract page-icon"></i>
+                    <h2 class="animate-text">شروط الاستخدام</h2>
+                </div>
+                <div class="text-content animate-text delay-1">
+                    <h3>1. قبول الشروط</h3>
+                    <p>باستخدامك لموقع "مكتبتي"، أنت توافق على الشروط والأحكام الموضحة هنا.</p>
+
+                    <h3>2. حقوق النشر</h3>
+                    <p>جميع الكتب والروابط المرفوعة هي للاستخدام التعليمي والشخصي فقط.</p>
+
+                    <h3>3. مسؤولية الاستخدام</h3>
+                    <p>إدارة الموقع لا تتحمل أي مسؤولية عن سوء استخدام المحتوى من قبل الزوار.</p>
+                </div>
+            </div>
+        </section>
+
+        <section id="howToUseView" class="view">
+            <button class="view-back-btn back-btn">
+                <i class="fas fa-arrow-right"></i> رجوع
+            </button>
+            <div class="page-content">
+                <div class="page-header">
+                    <i class="fas fa-laptop-code page-icon"></i>
+                    <h2 class="animate-text">كيفية الاستخدام</h2>
+                </div>
+                <div class="text-content animate-text delay-1">
+                    <ol>
+                        <li><strong>تصفح الكتب:</strong> اختار القسم اللي حابه (برمجة، ذكاء اصطناعي، الخ) والكتب هتظهرلك.</li>
+                        <li><strong>التحميل:</strong> افتح الكتاب ودوس "تحميل"، هتظهر صفحة التحميل. دوس على زرار "متابعة صفحة الفيسبوك" كخطوة أخيرة عشان يبدأ التحميل تلقائياً في خلال 5 ثواني وتفتح صفحة التحميل.</li>
+                        <li><strong>المشاركة:</strong> تقدر تشارك أي كتاب مع صحابك، ولما يفتح اللينك هيجيله الكتاب مباشرة.</li>
+                    </ol>
+                </div>
+            </div>
+        </section>
+
         <div id="downloadModal" class="modal hidden">
             <div class="modal-overlay"></div>
             <div class="modal-content download-modal-content">
                 <button class="back-to-top-btn" id="downloadBackBtn">
-                    <i class="fas fa-arrow-right"></i> رجوع
+                    <i class="fas fa-arrow-right"></i> إلغاء
                 </button>
                 <div id="downloadStep1" class="download-step active">
                     <div class="download-icon-wrap fb-icon-wrap">
                         <i class="fab fa-facebook-f"></i>
                     </div>
                     <h3 class="animate-text">تابع صفحتنا على فيسبوك</h3>
-                    <p class="animate-text delay-1">عشان تقدر تحمل الكتاب، تابع صفحتنا الأول</p>
+                    <p class="animate-text delay-1">عشان تقدر تحمل الكتاب، تابع صفحتنا كخطوة أخيرة</p>
                     <a id="fbFollowLink" href="#" target="_blank" class="white-btn fb-follow-btn">
-                        <i class="fab fa-facebook-f"></i> فتح صفحة الفيسبوك
+                        <i class="fab fa-facebook-f"></i> متابعة صفحة الفيسبوك
                     </a>
-                    <button id="fbFollowedBtn" class="white-btn outline-btn follow-done-btn">
-                        <i class="fas fa-check"></i> تابعت الصفحة
-                    </button>
-                </div>
-                <div id="downloadStep2" class="download-step hidden">
-                    <div class="download-icon-wrap">
-                        <i class="fas fa-cloud-download-alt"></i>
-                    </div>
-                    <h3 class="animate-text">جاري تجهيز الكتاب...</h3>
-                    <div class="download-countdown">
-                        <div class="countdown-circle">
-                            <svg viewBox="0 0 100 100">
-                                <circle class="countdown-bg" cx="50" cy="50" r="45"></circle>
-                                <circle class="countdown-fill" id="countdownFill" cx="50" cy="50" r="45"></circle>
-                            </svg>
-                            <span class="countdown-number" id="countdownNumber">5</span>
-                        </div>
-                    </div>
-                    <p class="download-hint animate-text delay-1">هيبدأ التحميل تلقائياً بعد التأكد...</p>
-                </div>
-                <div id="downloadStep3" class="download-step hidden">
-                    <div class="download-done-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <h3 class="animate-text">تم بدء التحميل!</h3>
-                    <p class="animate-text delay-1">الكتاب بيتحمل دلوقتي</p>
-                    <button class="white-btn" id="downloadDoneClose">
-                        <i class="fas fa-arrow-right"></i> رجوع للكتاب
-                    </button>
-                </div>
-                <div class="steps-indicator">
-                    <span class="step-dot active" data-step="1"></span>
-                    <span class="step-dot" data-step="2"></span>
-                    <span class="step-dot" data-step="3"></span>
                 </div>
             </div>
         </div>
@@ -280,7 +309,39 @@
         </div>
     </main>
     <footer class="app-footer">
-        <p>© 2026 مكتبتي - كل الحقوق محفوظة</p>
+        <div class="footer-container">
+            <div class="footer-col">
+                <div class="footer-logo">
+                    <i class="fas fa-book-open"></i> مكتبتي
+                </div>
+                <p class="footer-desc">
+                    أكبر منصة عربية بتصميم عصري لتوفير تجربة قراءة وتحميل استثنائية للكتب بعيداً عن الإعلانات المزعجة والتشتيت. هدفنا هو نشر المعرفة بتطور هائل.
+                </p>
+            </div>
+            
+            <div class="footer-col">
+                <h3 class="footer-title">المعلومات الأساسية</h3>
+                <ul class="footer-links">
+                    <li><a href="#howToUse" class="footer-link"><i class="fas fa-chevron-left"></i> كيفية استخدام الموقع</a></li>
+                    <li><a href="#privacy" class="footer-link"><i class="fas fa-chevron-left"></i> سياسة الخصوصية</a></li>
+                    <li><a href="#terms" class="footer-link"><i class="fas fa-chevron-left"></i> شروط الاستخدام</a></li>
+                </ul>
+            </div>
+            
+            <div class="footer-col">
+                <h3 class="footer-title">تابعنا وتواصل معنا</h3>
+                <div class="social-icons">
+                    <a href="#" class="social-icon whatsapp" title="واتساب"><i class="fab fa-whatsapp"></i></a>
+                    <a href="#" class="social-icon facebook" title="فيسبوك"><i class="fab fa-facebook-f"></i></a>
+                    <a href="#" class="social-icon linkedin" title="لينكد إن"><i class="fab fa-linkedin-in"></i></a>
+                    <a href="#" class="social-icon github" title="جيت هب"><i class="fab fa-github"></i></a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer-bottom">
+            © 2026 مكتبتي - جميع الحقوق محفوظة
+        </div>
     </footer>
     <script type="module" src="app.js"></script>
 </body>
