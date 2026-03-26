@@ -277,8 +277,14 @@ function handleRoute() {
 
     if (route === '#book' && parts[1]) {
         showBookDetail(parts[1]);
+    } else if (route === '#download' && parts[1]) {
+        openDownloadPage(parts[1]);
     } else if (route === '#admin') {
         showView('adminView');
+    } else if (route === '#privacyPolicy') {
+        showView('privacyPolicyView');
+    } else if (route === '#howToUse') {
+        showView('howToUseView');
     } else {
         showView('homeView');
     }
@@ -409,8 +415,18 @@ function initEventListeners() {
     document.getElementById('selectAllBtn').addEventListener('click', toggleSelectAll);
     document.getElementById('deleteSelectedBtn').addEventListener('click', deleteSelected);
 
-    document.getElementById('downloadBackBtn').addEventListener('click', closeDownloadModal);
-    document.getElementById('downloadDoneClose').addEventListener('click', closeDownloadModal);
+    document.getElementById('privacyBackBtn').addEventListener('click', () => {
+        window.history.back();
+    });
+    document.getElementById('howToUseBackBtn').addEventListener('click', () => {
+        window.history.back();
+    });
+    document.getElementById('downloadBackBtn').addEventListener('click', () => {
+        window.history.back();
+    });
+    document.getElementById('downloadDoneClose').addEventListener('click', () => {
+        window.history.back();
+    });
 
     document.getElementById('confirmDeleteNo').addEventListener('click', closeConfirmDelete);
 
@@ -541,7 +557,7 @@ function showBookDetail(bookId) {
     `;
 
     document.getElementById('downloadBookBtn').addEventListener('click', () => {
-        openDownloadModal(book);
+        window.location.hash = `#download/${bookId}`;
     });
 
     document.getElementById('shareBookBtn').addEventListener('click', () => {
@@ -579,71 +595,39 @@ function shareBook(book, link) {
 }
 
 let currentDownloadBook = null;
-let downloadTimerInterval = null;
+let downloadTimerTimeout = null;
 
-function openDownloadModal(book) {
+function openDownloadPage(bookId) {
+    const book = allBooks[bookId];
+    if (!book) {
+        window.location.hash = '#home';
+        return;
+    }
+    showView('downloadView');
     currentDownloadBook = book;
-    const modal = document.getElementById('downloadModal');
-    modal.classList.remove('hidden');
-    document.body.classList.add('modal-open');
-
-    // Setup Step 1
+    
     const fbLink = globalSettings.facebookLink || '#';
     const fbBtn = document.getElementById('fbFollowLink');
     fbBtn.href = fbLink;
     
-    // reset steps
     document.querySelectorAll('.download-step').forEach(s => s.classList.add('hidden'));
     document.getElementById('downloadStep1').classList.remove('hidden');
-    document.querySelectorAll('.step-dot').forEach(d => d.classList.remove('active'));
-    document.querySelector('.step-dot[data-step="1"]').classList.add('active');
-}
-
-document.getElementById('fbFollowedBtn').addEventListener('click', () => {
-    // Go to Step 2
-    document.querySelectorAll('.download-step').forEach(s => s.classList.add('hidden'));
-    document.getElementById('downloadStep2').classList.remove('hidden');
-    document.querySelectorAll('.step-dot').forEach(d => d.classList.remove('active'));
-    document.querySelector('.step-dot[data-step="2"]').classList.add('active');
     
-    startDownloadCountdown();
-});
-
-function closeDownloadModal() {
-    document.getElementById('downloadModal').classList.add('hidden');
-    document.body.classList.remove('modal-open');
-    clearInterval(downloadTimerInterval);
-    currentDownloadBook = null;
-}
-
-function startDownloadCountdown() {
-    const countdownNumber = document.getElementById('countdownNumber');
-    const countdownFill = document.getElementById('countdownFill');
-    let seconds = 5;
-
-    countdownNumber.textContent = seconds;
-    countdownFill.style.strokeDashoffset = '0';
-
-    clearInterval(downloadTimerInterval);
-
-    downloadTimerInterval = setInterval(() => {
-        seconds--;
-        countdownNumber.textContent = seconds;
-        countdownFill.style.strokeDashoffset = `${((5 - seconds) / 5) * 283}`;
-
-        if (seconds <= 0) {
-            clearInterval(downloadTimerInterval);
-
+    // reset click handler to avoid duplicates
+    fbBtn.onclick = () => {
+        document.querySelectorAll('.download-step').forEach(s => s.classList.add('hidden'));
+        document.getElementById('downloadStep2').classList.remove('hidden');
+        
+        clearTimeout(downloadTimerTimeout);
+        downloadTimerTimeout = setTimeout(() => {
             document.querySelectorAll('.download-step').forEach(s => s.classList.add('hidden'));
             document.getElementById('downloadStep3').classList.remove('hidden');
-            document.querySelectorAll('.step-dot').forEach(d => d.classList.remove('active'));
-            document.querySelector('.step-dot[data-step="3"]').classList.add('active');
-
+            
             if (currentDownloadBook && currentDownloadBook.downloadLink) {
                 window.open(currentDownloadBook.downloadLink, '_blank');
             }
-        }
-    }, 1000);
+        }, 5000);
+    };
 }
 
 function updateSubcategories(category) {
