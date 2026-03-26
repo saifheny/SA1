@@ -279,9 +279,16 @@ function handleRoute() {
         showBookDetail(parts[1]);
     } else if (route === '#admin') {
         showView('adminView');
+    } else if (route === '#privacy') {
+        showView('privacyView');
+    } else if (route === '#terms') {
+        showView('termsView');
+    } else if (route === '#howToUse') {
+        showView('howToUseView');
     } else {
         showView('homeView');
     }
+    window.scrollTo(0, 0);
 }
 
 function showView(viewId) {
@@ -294,8 +301,9 @@ function showView(viewId) {
         view.style.animation = '';
     }
     if (viewId === 'homeView') currentView = 'home';
-    if (viewId === 'adminView') currentView = 'admin';
-    if (viewId === 'bookDetailView') currentView = 'detail';
+    else if (viewId === 'adminView') currentView = 'admin';
+    else if (viewId === 'bookDetailView') currentView = 'detail';
+    else currentView = 'page';
 
     const header = document.getElementById('mainHeader');
     header.style.display = viewId === 'homeView' ? '' : 'none';
@@ -355,6 +363,12 @@ function initEventListeners() {
 
     document.getElementById('adminBackBtn').addEventListener('click', () => {
         window.location.hash = '#home';
+    });
+
+    document.querySelectorAll('.view-back-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            window.location.hash = '#home';
+        });
     });
 
     document.querySelectorAll('.admin-tab').forEach(tab => {
@@ -587,63 +601,40 @@ function openDownloadModal(book) {
     modal.classList.remove('hidden');
     document.body.classList.add('modal-open');
 
-    // Setup Step 1
     const fbLink = globalSettings.facebookLink || '#';
     const fbBtn = document.getElementById('fbFollowLink');
     fbBtn.href = fbLink;
     
-    // reset steps
-    document.querySelectorAll('.download-step').forEach(s => s.classList.add('hidden'));
     document.getElementById('downloadStep1').classList.remove('hidden');
-    document.querySelectorAll('.step-dot').forEach(d => d.classList.remove('active'));
-    document.querySelector('.step-dot[data-step="1"]').classList.add('active');
 }
 
-document.getElementById('fbFollowedBtn').addEventListener('click', () => {
-    // Go to Step 2
-    document.querySelectorAll('.download-step').forEach(s => s.classList.add('hidden'));
-    document.getElementById('downloadStep2').classList.remove('hidden');
-    document.querySelectorAll('.step-dot').forEach(d => d.classList.remove('active'));
-    document.querySelector('.step-dot[data-step="2"]').classList.add('active');
+document.getElementById('fbFollowLink').addEventListener('click', () => {
+    const btn = document.getElementById('fbFollowLink');
+    const originalHTML = btn.innerHTML;
+    const originalHref = btn.href;
     
-    startDownloadCountdown();
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> جاري التجهيز...';
+    btn.style.pointerEvents = 'none';
+    
+    if (downloadTimerInterval) clearTimeout(downloadTimerInterval);
+    
+    downloadTimerInterval = setTimeout(() => {
+        if (currentDownloadBook && currentDownloadBook.downloadLink) {
+            window.open(currentDownloadBook.downloadLink, '_blank');
+        }
+        closeDownloadModal();
+        
+        btn.innerHTML = originalHTML;
+        btn.style.pointerEvents = 'auto';
+        btn.href = originalHref;
+    }, 5000);
 });
 
 function closeDownloadModal() {
     document.getElementById('downloadModal').classList.add('hidden');
     document.body.classList.remove('modal-open');
-    clearInterval(downloadTimerInterval);
+    clearTimeout(downloadTimerInterval);
     currentDownloadBook = null;
-}
-
-function startDownloadCountdown() {
-    const countdownNumber = document.getElementById('countdownNumber');
-    const countdownFill = document.getElementById('countdownFill');
-    let seconds = 5;
-
-    countdownNumber.textContent = seconds;
-    countdownFill.style.strokeDashoffset = '0';
-
-    clearInterval(downloadTimerInterval);
-
-    downloadTimerInterval = setInterval(() => {
-        seconds--;
-        countdownNumber.textContent = seconds;
-        countdownFill.style.strokeDashoffset = `${((5 - seconds) / 5) * 283}`;
-
-        if (seconds <= 0) {
-            clearInterval(downloadTimerInterval);
-
-            document.querySelectorAll('.download-step').forEach(s => s.classList.add('hidden'));
-            document.getElementById('downloadStep3').classList.remove('hidden');
-            document.querySelectorAll('.step-dot').forEach(d => d.classList.remove('active'));
-            document.querySelector('.step-dot[data-step="3"]').classList.add('active');
-
-            if (currentDownloadBook && currentDownloadBook.downloadLink) {
-                window.open(currentDownloadBook.downloadLink, '_blank');
-            }
-        }
-    }, 1000);
 }
 
 function updateSubcategories(category) {
