@@ -4,25 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>مكتبتي | BookStore</title>
-    <meta name="description" content="مكتبة إلكترونية لتحميل كتب البرمجة والقصص">
+    <meta name="description" content="مكتبة إلكترونية لتحميل كتب البرمجة والذكاء الاصطناعي والقصص مجاناً">
     <meta name="theme-color" content="#000000">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+    <!-- ✅ Favicon: أيقونة كتاب في تبويب المتصفح -->
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='12' fill='%23000'/%3E%3Crect x='10' y='8' width='34' height='46' rx='4' fill='%23fff'/%3E%3Crect x='16' y='18' width='22' height='3' rx='1.5' fill='%23000'/%3E%3Crect x='16' y='26' width='22' height='3' rx='1.5' fill='%23000'/%3E%3Crect x='16' y='34' width='15' height='3' rx='1.5' fill='%23000'/%3E%3Crect x='44' y='8' width='7' height='46' rx='3' fill='rgba(255,255,255,0.25)'/%3E%3Crect x='10' y='46' width='34' height='8' rx='0 0 4 4' fill='%23e0e0e0'/%3E%3C/svg%3E">
+
+    <!-- ✅ Open Graph: صورة تظهر عند مشاركة رابط الموقع -->
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="مكتبتي | أفضل كتب البرمجة والذكاء الاصطناعي">
+    <meta property="og:description" content="مكتبة إلكترونية مجانية لتحميل أفضل كتب البرمجة والذكاء الاصطناعي والقصص">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1200&h=630&fit=crop&q=80">
+    <meta property="og:image:width" content="1200">
+    <meta property="og:image:height" content="630">
+    <meta property="og:locale" content="ar_AR">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="مكتبتي | أفضل كتب البرمجة والذكاء الاصطناعي">
+    <meta name="twitter:description" content="مكتبة إلكترونية مجانية لتحميل أفضل كتب البرمجة والذكاء الاصطناعي والقصص">
+    <meta name="twitter:image" content="https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=1200&h=630&fit=crop&q=80">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <meta property="og:title" content="مكتبتي | BookStore">
-    <meta property="og:description" content="مكتبة إلكترونية لتحميل كتب البرمجة والقصص">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1524578271613-d550eacf6090?w=1200&q=80">
-    <meta property="og:type" content="website">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22><path fill=%22%23ffffff%22 d=%22M256 160c-52.9 0-96-43.1-96-96s43.1-96 96-96 96 43.1 96 96-43.1 96-96 96zm246 122.9C483 273.6 462.6 264 439.8 264H384c-35.3 0-64-28.7-64-64V170.7c0-11-9-20-20-20h-88c-11 0-20 9-20 20V200c0 35.3-28.7 64-64 64H72.2C49.4 264 29 273.6 10 282.9c-10 4.9-10 19.3 0 24.2C29 316.4 49.4 326 72.2 326H128c35.3 0 64 28.7 64 64v29.3c0 11 9 20 20 20h88c11 0 20-9 20-20V390c0-35.3 28.7-64 64-64h55.8c22.8 0 43.2-9.6 62.2-18.9 10-4.9 10-19.3 0-24.2z%22/></svg>" type="image/svg+xml">
-    <link rel="stylesheet" href="style (43).css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <canvas id="particlesCanvas"></canvas>
     <div id="toast" class="toast"></div>
     <main id="app">
+
+        <!-- ✅ Header الرئيسي -->
         <header id="mainHeader" class="app-header">
             <div class="header-content">
                 <div class="logo" id="logoArea">
@@ -43,6 +57,8 @@
                 </button>
             </div>
         </header>
+
+        <!-- ✅ الصفحة الرئيسية -->
         <section id="homeView" class="view active">
             <div class="hero-section">
                 <div class="hero-bg-image"></div>
@@ -75,12 +91,229 @@
                 <p class="animate-text">مفيش كتب لسه... ضيف كتب من لوحة التحكم</p>
             </div>
         </section>
+
+        <!-- ✅ صفحة تفاصيل الكتاب -->
         <section id="bookDetailView" class="view">
             <button id="backBtn" class="back-btn">
                 <i class="fas fa-arrow-right"></i> رجوع
             </button>
             <div id="bookDetailContent" class="book-detail-content"></div>
         </section>
+
+        <!-- ✅ صفحة التحميل (بدلاً من المودال) -->
+        <section id="downloadView" class="view download-page-view">
+            <button id="downloadPageBackBtn" class="back-btn">
+                <i class="fas fa-arrow-right"></i> رجوع
+            </button>
+            <div class="download-page-inner">
+                <!-- الخطوة 1: تابع الصفحة -->
+                <div id="downloadStep1" class="download-step active">
+                    <div class="download-icon-wrap fb-icon-wrap">
+                        <i class="fab fa-facebook-f"></i>
+                    </div>
+                    <h3 class="animate-text">تابع صفحتنا على فيسبوك</h3>
+                    <p class="animate-text delay-1">عشان تقدر تحمل الكتاب، تابع صفحتنا الأول</p>
+                    <a id="fbFollowLink" href="#" target="_blank" class="white-btn fb-follow-btn">
+                        <i class="fab fa-facebook-f"></i> فتح صفحة الفيسبوك
+                    </a>
+                    <button id="fbFollowedBtn" class="white-btn outline-btn follow-done-btn">
+                        <i class="fas fa-check"></i> تابعت الصفحة
+                    </button>
+                </div>
+
+                <!-- الخطوة 2: انتظار التحميل (بدون أرقام عد تنازلي) -->
+                <div id="downloadStep2" class="download-step hidden">
+                    <div class="download-icon-wrap loading-icon-wrap">
+                        <i class="fas fa-book-open loading-spin-icon"></i>
+                    </div>
+                    <h3 class="animate-text">جاري تجهيز الكتاب...</h3>
+                    <div class="loading-dots-container">
+                        <span class="loading-dot"></span>
+                        <span class="loading-dot"></span>
+                        <span class="loading-dot"></span>
+                    </div>
+                    <p class="download-hint animate-text delay-1">هيبدأ التحميل تلقائياً بعد لحظات...</p>
+                </div>
+
+                <!-- الخطوة 3: تم التحميل -->
+                <div id="downloadStep3" class="download-step hidden">
+                    <div class="download-done-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3 class="animate-text">تم بدء التحميل!</h3>
+                    <p class="animate-text delay-1">الكتاب بيتحمل دلوقتي</p>
+                    <button class="white-btn" id="downloadDoneClose">
+                        <i class="fas fa-arrow-right"></i> رجوع للكتاب
+                    </button>
+                </div>
+
+                <div class="steps-indicator">
+                    <span class="step-dot active" data-step="1"></span>
+                    <span class="step-dot" data-step="2"></span>
+                    <span class="step-dot" data-step="3"></span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ✅ صفحة سياسة الخصوصية -->
+        <section id="privacyView" class="view info-page privacy-page">
+            <div class="info-page-header privacy-header">
+                <button class="info-back-btn" id="privacyBackBtn">
+                    <i class="fas fa-arrow-right"></i> رجوع
+                </button>
+                <div class="info-header-icon">
+                    <i class="fas fa-shield-halved"></i>
+                </div>
+                <h2>سياسة الخصوصية</h2>
+                <p>آخر تحديث: مارس 2026</p>
+            </div>
+            <div class="info-page-content">
+                <div class="info-card">
+                    <div class="info-card-icon privacy-icon"><i class="fas fa-info-circle"></i></div>
+                    <h3>مقدمة</h3>
+                    <p>نحن في مكتبتي نحترم خصوصيتك ونلتزم بحمايتها. تشرح هذه السياسة كيف نجمع المعلومات ونستخدمها ونحميها عند استخدامك لموقعنا الإلكتروني.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon privacy-icon"><i class="fas fa-database"></i></div>
+                    <h3>البيانات التي نجمعها</h3>
+                    <p>لا نجمع أي بيانات شخصية تعريفية بدون إذنك الصريح. الموقع يستخدم Firebase لتخزين بيانات الكتب فقط (العنوان، المؤلف، رابط التحميل، التصنيف). لا نجمع اسمك أو بريدك الإلكتروني أو أي معلومات شخصية أخرى.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon privacy-icon"><i class="fas fa-cookie-bite"></i></div>
+                    <h3>ملفات تعريف الارتباط (Cookies)</h3>
+                    <p>قد يستخدم الموقع ملفات تعريف الارتباط لتحسين تجربة الاستخدام. هذه الملفات لا تحتوي على أي معلومات شخصية ويمكنك تعطيلها من إعدادات المتصفح في أي وقت.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon privacy-icon"><i class="fas fa-link"></i></div>
+                    <h3>روابط الطرف الثالث</h3>
+                    <p>قد يحتوي الموقع على روابط لمواقع خارجية مثل صفحة فيسبوك أو روابط تحميل الكتب. نحن غير مسؤولين عن سياسات الخصوصية الخاصة بهذه المواقع ونوصيك بمراجعتها قبل الاستخدام.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon privacy-icon"><i class="fas fa-facebook"></i></div>
+                    <h3>فيسبوك والمتابعة</h3>
+                    <p>عملية متابعة الصفحة على فيسبوك للحصول على الكتاب تتم عبر موقع فيسبوك المستقل. نحن لا نجمع أي بيانات من حسابك على فيسبوك ولا نملك الوصول إليها.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon privacy-icon"><i class="fas fa-envelope"></i></div>
+                    <h3>التواصل معنا</h3>
+                    <p>إذا كان لديك أي استفسار حول سياسة الخصوصية أو طريقة تعاملنا مع بياناتك، يسعدنا التواصل معك عبر صفحتنا على فيسبوك.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon privacy-icon"><i class="fas fa-refresh"></i></div>
+                    <h3>تحديثات السياسة</h3>
+                    <p>نحتفظ بالحق في تحديث سياسة الخصوصية هذه في أي وقت. سيتم إخطارك بأي تغييرات جوهرية عبر إشعار على الموقع. استمرارك في استخدام الموقع بعد التحديث يعني موافقتك على الشروط الجديدة.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ✅ صفحة كيفية الاستخدام -->
+        <section id="howToUseView" class="view info-page howtouse-page">
+            <div class="info-page-header howtouse-header">
+                <button class="info-back-btn" id="howToUseBackBtn">
+                    <i class="fas fa-arrow-right"></i> رجوع
+                </button>
+                <div class="info-header-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <h2>كيفية الاستخدام</h2>
+                <p>دليلك الكامل لاستخدام مكتبتي</p>
+            </div>
+            <div class="info-page-content">
+                <div class="how-step-card">
+                    <div class="how-step-number howtouse-number">١</div>
+                    <div class="how-step-body">
+                        <h3><i class="fas fa-search"></i> ابحث عن كتابك</h3>
+                        <p>استخدم أيقونة البحث في الأعلى للبحث بالاسم أو المؤلف. يمكنك أيضاً تصفية الكتب حسب التصنيف من الفلاتر في الصفحة الرئيسية.</p>
+                    </div>
+                </div>
+                <div class="how-step-card">
+                    <div class="how-step-number howtouse-number">٢</div>
+                    <div class="how-step-body">
+                        <h3><i class="fas fa-book-open"></i> اضغط على الكتاب</h3>
+                        <p>اضغط على أي كتاب لرؤية تفاصيله الكاملة: الاسم، المؤلف، الوصف، والتصنيف. ستظهر لك أزرار التحميل والمشاركة.</p>
+                    </div>
+                </div>
+                <div class="how-step-card">
+                    <div class="how-step-number howtouse-number">٣</div>
+                    <div class="how-step-body">
+                        <h3><i class="fas fa-download"></i> حمّل الكتاب</h3>
+                        <p>اضغط على زر "تحميل" في صفحة الكتاب. سيُطلب منك متابعة صفحتنا على فيسبوك أولاً كشرط للتحميل المجاني.</p>
+                    </div>
+                </div>
+                <div class="how-step-card">
+                    <div class="how-step-number howtouse-number">٤</div>
+                    <div class="how-step-body">
+                        <h3><i class="fab fa-facebook-f"></i> تابع الصفحة</h3>
+                        <p>اضغط على زر "فتح صفحة الفيسبوك" وقم بمتابعة الصفحة. ثم ارجع واضغط على "تابعت الصفحة" وسيبدأ التحميل تلقائياً بعد لحظات.</p>
+                    </div>
+                </div>
+                <div class="how-step-card">
+                    <div class="how-step-number howtouse-number">٥</div>
+                    <div class="how-step-body">
+                        <h3><i class="fas fa-share-nodes"></i> شارك مع أصدقائك</h3>
+                        <p>يمكنك مشاركة أي كتاب مع أصدقائك عبر زر "مشاركة" أو نسخ الرابط المباشر للكتاب وإرساله لأي شخص.</p>
+                    </div>
+                </div>
+                <div class="how-step-card">
+                    <div class="how-step-number howtouse-number">٦</div>
+                    <div class="how-step-body">
+                        <h3><i class="fas fa-filter"></i> استخدم التصنيفات</h3>
+                        <p>استخدم أزرار التصنيف (برمجة، ذكاء اصطناعي، قصص، عام) لتصفية الكتب حسب اهتمامك واكتشاف أفضل الكتب في كل مجال.</p>
+                    </div>
+                </div>
+                <div class="info-tip-box">
+                    <i class="fas fa-lightbulb"></i>
+                    <p><strong>نصيحة:</strong> اضغط على شعار "مكتبتي" ثلاث مرات متتالية للوصول إلى لوحة التحكم وإضافة كتبك الخاصة!</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- ✅ صفحة عن التطبيق / شروط الاستخدام -->
+        <section id="aboutView" class="view info-page about-page">
+            <div class="info-page-header about-header">
+                <button class="info-back-btn" id="aboutBackBtn">
+                    <i class="fas fa-arrow-right"></i> رجوع
+                </button>
+                <div class="info-header-icon">
+                    <i class="fas fa-book"></i>
+                </div>
+                <h2>عن مكتبتي</h2>
+                <p>مشروع مجاني لنشر المعرفة</p>
+            </div>
+            <div class="info-page-content">
+                <div class="about-mission-card">
+                    <i class="fas fa-bullseye"></i>
+                    <h3>رسالتنا</h3>
+                    <p>مكتبتي هي منصة مجانية تهدف إلى إتاحة أفضل كتب البرمجة والذكاء الاصطناعي والقصص لكل شخص يريد أن يتعلم وينمو، بدون أي تكلفة.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon about-icon"><i class="fas fa-star"></i></div>
+                    <h3>ما الذي نقدمه؟</h3>
+                    <p>مجموعة مختارة بعناية من أفضل الكتب التقنية والأدبية، مصنفة بشكل واضح لتسهيل الوصول إليها وتحميلها مجاناً.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon about-icon"><i class="fas fa-gavel"></i></div>
+                    <h3>شروط الاستخدام</h3>
+                    <p>الكتب المتاحة مخصصة للاستخدام الشخصي والتعليمي فقط. يُمنع إعادة توزيع الكتب أو بيعها أو استخدامها لأغراض تجارية. نحترم حقوق الملكية الفكرية ونلتزم بها.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon about-icon"><i class="fas fa-hand-holding-heart"></i></div>
+                    <h3>ادعمنا</h3>
+                    <p>أفضل دعم تقدمه لنا هو متابعة صفحتنا على فيسبوك ومشاركة الموقع مع أصدقائك المهتمين بالمعرفة والتطوير. معاً نبني مجتمع عربي متعلم.</p>
+                </div>
+                <div class="info-card">
+                    <div class="info-card-icon about-icon"><i class="fas fa-exclamation-triangle"></i></div>
+                    <h3>إخلاء المسؤولية</h3>
+                    <p>نسعى دائماً لتوفير كتب عالية الجودة ومجانية التوزيع. في حال وجود أي انتهاك لحقوق الملكية الفكرية، يرجى التواصل معنا فوراً وسنتخذ الإجراء المناسب.</p>
+                </div>
+                <div class="about-version-badge">
+                    <i class="fas fa-code-branch"></i>
+                    <span>الإصدار 2.0 — مكتبتي &copy; 2026</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ✅ لوحة التحكم -->
         <section id="adminView" class="view">
             <div class="admin-header">
                 <button id="adminBackBtn" class="back-btn">
@@ -126,7 +359,6 @@
                         <label for="bookLink"><i class="fas fa-link"></i> لينك تحميل الكتاب</label>
                         <input type="url" id="bookLink" required placeholder="https://...">
                     </div>
-
                     <div class="form-group">
                         <label for="bookCategory"><i class="fas fa-folder"></i> التصنيف</label>
                         <select id="bookCategory" required>
@@ -190,6 +422,8 @@
                 </div>
             </div>
         </section>
+
+        <!-- Modal: اختيار الأيقونة -->
         <div id="iconPickerModal" class="modal hidden">
             <div class="modal-overlay"></div>
             <div class="modal-content icon-picker-content">
@@ -213,62 +447,8 @@
                 <div class="icon-grid" id="iconGrid"></div>
             </div>
         </div>
-        
-        <section id="privacyPolicyView" class="view">
-            <button id="privacyBackBtn" class="back-btn">
-                <i class="fas fa-arrow-right"></i> رجوع
-            </button>
-            <div class="page-content">
-                <h2>سياسة الخصوصية</h2>
-                <p>نحن نحترم خصوصيتك. المعلومات التي نجمعها تستخدم فقط لتحسين تجربتك في الموقع ولا يتم مشاركتها مع أطراف ثالثة.</p>
-                <p>يتم استخدام الكوكيز فقط لتحسين أداء الموقع.</p>
-            </div>
-        </section>
 
-        <section id="howToUseView" class="view">
-            <button id="howToUseBackBtn" class="back-btn">
-                <i class="fas fa-arrow-right"></i> رجوع
-            </button>
-            <div class="page-content">
-                <h2>كيفية الاستخدام</h2>
-                <p>تصفح الكتب المتاحة عبر الأقسام. للتحميل، اضغط على الكتاب المطلوب rồi اضغط على زر التحميل، بعد متابعة الصفحة سيتم تحويلك إلى رابط التحميل.</p>
-            </div>
-        </section>
-
-        <section id="downloadView" class="view">
-            <button id="downloadBackBtn" class="back-btn">
-                <i class="fas fa-arrow-right"></i> رجوع
-            </button>
-            <div class="download-page-content">
-                <div id="downloadStep1" class="download-step active">
-                    <div class="download-icon-wrap fb-icon-wrap">
-                        <i class="fab fa-facebook-f"></i>
-                    </div>
-                    <h3 class="animate-text">تابع صفحتنا على فيسبوك</h3>
-                    <p class="animate-text delay-1">عشان تقدر تحمل الكتاب، لازم تتابع صفحتنا الأول</p>
-                    <a id="fbFollowLink" href="#" target="_blank" class="white-btn fb-follow-btn">
-                        <i class="fab fa-facebook-f"></i> متابعة الصفحة
-                    </a>
-                </div>
-                <div id="downloadStep2" class="download-step hidden">
-                    <div class="download-icon-wrap">
-                        <i class="fas fa-spinner fa-spin"></i>
-                    </div>
-                    <h3 class="animate-text">جاري بدء التحميل...</h3>
-                    <p class="download-hint animate-text delay-1">شوية وبيبدأ التحميل تلقائي، متقفلش الصفحة.</p>
-                </div>
-                <div id="downloadStep3" class="download-step hidden">
-                    <div class="download-done-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <h3 class="animate-text">تم بدء التحميل!</h3>
-                    <p class="animate-text delay-1">الكتاب بيتحمل دلوقتي</p>
-                    <button class="white-btn" id="downloadDoneClose">
-                        <i class="fas fa-arrow-right"></i> رجوع للكتاب
-                    </button>
-                </div>
-            </div>
-        </section>
+        <!-- Modal: تأكيد الحذف -->
         <div id="confirmDeleteModal" class="modal hidden">
             <div class="modal-overlay"></div>
             <div class="modal-content confirm-modal-content">
@@ -287,20 +467,46 @@
                 </div>
             </div>
         </div>
+
     </main>
-    <footer class="app-footer">
-        <div class="footer-links">
-            <a href="#privacyPolicy">سياسة الخصوصية</a>
-            <a href="#howToUse">كيفية الاستخدام</a>
-        </div>
+
+    <!-- ✅ Footer محدث مع أيقونات السوشيال ميديا وروابط المعلومات -->
+    <footer class="app-footer" id="mainFooter">
+        <!-- أيقونات السوشيال ميديا -->
         <div class="social-icons">
-            <a href="#" class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="social-icon linkedin"><i class="fab fa-linkedin-in"></i></a>
-            <a href="#" class="social-icon reddit"><i class="fab fa-reddit-alien"></i></a>
-            <a href="#" class="social-icon github"><i class="fab fa-github"></i></a>
+            <a id="footerFbLink" href="#" target="_blank" class="social-icon facebook" aria-label="Facebook" title="فيسبوك">
+                <i class="fab fa-facebook-f"></i>
+            </a>
+            <a href="#" target="_blank" class="social-icon linkedin" aria-label="LinkedIn" title="لينكد إن">
+                <i class="fab fa-linkedin-in"></i>
+            </a>
+            <a href="#" target="_blank" class="social-icon reddit" aria-label="Reddit" title="ريديت">
+                <i class="fab fa-reddit-alien"></i>
+            </a>
+            <a href="#" target="_blank" class="social-icon github" aria-label="GitHub" title="جيت هاب">
+                <i class="fab fa-github"></i>
+            </a>
         </div>
-        <p>© 2026 مكتبتي - كل الحقوق محفوظة</p>
+
+        <!-- روابط المعلومات -->
+        <div class="footer-links">
+            <a href="#privacy" class="footer-link">
+                <i class="fas fa-shield-halved"></i> سياسة الخصوصية
+            </a>
+            <span class="footer-divider">•</span>
+            <a href="#how-to-use" class="footer-link">
+                <i class="fas fa-graduation-cap"></i> كيفية الاستخدام
+            </a>
+            <span class="footer-divider">•</span>
+            <a href="#about" class="footer-link">
+                <i class="fas fa-book"></i> عن التطبيق
+            </a>
+        </div>
+
+        <!-- حقوق النشر -->
+        <p class="footer-copy">© 2026 مكتبتي — كل الحقوق محفوظة</p>
     </footer>
+
     <script type="module" src="app.js"></script>
 </body>
 </html>
