@@ -16,13 +16,11 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const booksRef = ref(db, 'books');
-const settingsRef = ref(db, 'settings');
 
 const CATEGORIES = {
     programming: {
         name: 'برمجة',
         icon: 'fas fa-code',
-        image: 'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&q=75',
         subcategories: {
             python: 'بايثون',
             html: 'HTML',
@@ -35,7 +33,6 @@ const CATEGORIES = {
     ai: {
         name: 'ذكاء اصطناعي',
         icon: 'fas fa-robot',
-        image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&q=75',
         subcategories: {
             ai: 'ذكاء اصطناعي',
             ml: 'تعلم الآلة',
@@ -48,7 +45,6 @@ const CATEGORIES = {
     stories: {
         name: 'قصص',
         icon: 'fas fa-feather-alt',
-        image: 'https://images.unsplash.com/photo-1524578271613-d550eacf6090?w=400&q=75',
         subcategories: {
             novels: 'روايات',
             short_stories: 'قصص قصيرة',
@@ -61,7 +57,6 @@ const CATEGORIES = {
     general: {
         name: 'عام',
         icon: 'fas fa-globe',
-        image: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=75',
         subcategories: {
             self_dev: 'تطوير ذاتي',
             science: 'علوم',
@@ -70,37 +65,6 @@ const CATEGORIES = {
             philosophy: 'فلسفة'
         }
     }
-};
-
-const CATEGORY_IMAGES = {
-    programming: [
-        'https://images.unsplash.com/photo-1461749280684-dccba630e2f6?w=400&q=75',
-        'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=400&q=75',
-        'https://images.unsplash.com/photo-1555066931-4365d14bab8c?w=400&q=75',
-        'https://images.unsplash.com/photo-1517694712202-14dd9538aa97?w=400&q=75',
-        'https://images.unsplash.com/photo-1504639725590-34d0984388bd?w=400&q=75'
-    ],
-    ai: [
-        'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400&q=75',
-        'https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=400&q=75',
-        'https://images.unsplash.com/photo-1555255707-c07966088b7b?w=400&q=75',
-        'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=400&q=75',
-        'https://images.unsplash.com/photo-1531746790095-e5a3e5b15090?w=400&q=75'
-    ],
-    stories: [
-        'https://images.unsplash.com/photo-1524578271613-d550eacf6090?w=400&q=75',
-        'https://images.unsplash.com/photo-1474932430478-367dbb6832c1?w=400&q=75',
-        'https://images.unsplash.com/photo-1512820790803-83ca734da794?w=400&q=75',
-        'https://images.unsplash.com/photo-1481627834876-b7833e8f5570?w=400&q=75',
-        'https://images.unsplash.com/photo-1497633762265-9d179a990aa6?w=400&q=75'
-    ],
-    general: [
-        'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=400&q=75',
-        'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400&q=75',
-        'https://images.unsplash.com/photo-1491841573634-28140fc7ced7?w=400&q=75',
-        'https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=400&q=75',
-        'https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=400&q=75'
-    ]
 };
 
 const ICON_DATABASE = {
@@ -183,7 +147,6 @@ const ICON_DATABASE = {
 };
 
 let allBooks = {};
-let globalSettings = {};
 let currentView = 'home';
 let currentFilter = 'all';
 let selectedBooks = new Set();
@@ -195,21 +158,16 @@ document.addEventListener('DOMContentLoaded', () => {
     initRouter();
     initEventListeners();
     loadBooks();
-    loadSettings();
+    setTimeout(() => {
+        document.getElementById('loadingScreen').classList.add('hide');
+    }, 1500);
 });
-
-function loadSettings() {
-    onValue(settingsRef, (snapshot) => {
-        globalSettings = snapshot.val() || {};
-        document.getElementById('globalFacebookLink').value = globalSettings.facebookLink || '';
-    });
-}
 
 function initParticles() {
     const canvas = document.getElementById('particlesCanvas');
     const ctx = canvas.getContext('2d');
     let particles = [];
-    const count = 30;
+    const count = 40;
 
     function resize() {
         canvas.width = Math.min(window.innerWidth, 480);
@@ -222,10 +180,10 @@ function initParticles() {
         particles.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            size: Math.random() * 1.5 + 0.3,
-            speedX: (Math.random() - 0.5) * 0.2,
-            speedY: (Math.random() - 0.5) * 0.2,
-            opacity: Math.random() * 0.25 + 0.05
+            size: Math.random() * 2 + 0.5,
+            speedX: (Math.random() - 0.5) * 0.3,
+            speedY: (Math.random() - 0.5) * 0.3,
+            opacity: Math.random() * 0.4 + 0.1
         });
     }
 
@@ -240,18 +198,18 @@ function initParticles() {
             if (p.y > canvas.height) p.y = 0;
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
+            ctx.fillStyle = `rgba(162, 155, 254, ${p.opacity})`;
             ctx.fill();
         });
 
         particles.forEach((p1, i) => {
             particles.slice(i + 1).forEach(p2 => {
                 const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
-                if (dist < 100) {
+                if (dist < 120) {
                     ctx.beginPath();
                     ctx.moveTo(p1.x, p1.y);
                     ctx.lineTo(p2.x, p2.y);
-                    ctx.strokeStyle = `rgba(255, 255, 255, ${0.04 * (1 - dist / 100)})`;
+                    ctx.strokeStyle = `rgba(108, 92, 231, ${0.08 * (1 - dist / 120)})`;
                     ctx.lineWidth = 0.5;
                     ctx.stroke();
                 }
@@ -277,14 +235,8 @@ function handleRoute() {
 
     if (route === '#book' && parts[1]) {
         showBookDetail(parts[1]);
-    } else if (route === '#download' && parts[1]) {
-        openDownloadPage(parts[1]);
     } else if (route === '#admin') {
         showView('adminView');
-    } else if (route === '#privacyPolicy') {
-        showView('privacyPolicyView');
-    } else if (route === '#howToUse') {
-        showView('howToUseView');
     } else {
         showView('homeView');
     }
@@ -304,10 +256,15 @@ function showView(viewId) {
     if (viewId === 'bookDetailView') currentView = 'detail';
 
     const header = document.getElementById('mainHeader');
-    header.style.display = viewId === 'homeView' ? '' : 'none';
+    if (viewId === 'homeView') {
+        header.style.display = '';
+    } else {
+        header.style.display = 'none';
+    }
 }
 
 function initEventListeners() {
+    
     document.getElementById('logoArea').addEventListener('click', () => {
         adminTapCount++;
         clearTimeout(adminTapTimer);
@@ -325,13 +282,11 @@ function initEventListeners() {
             document.getElementById('searchInput').focus();
         }
     });
-
     document.getElementById('searchClose').addEventListener('click', () => {
         document.getElementById('searchBar').classList.add('hidden');
         document.getElementById('searchInput').value = '';
         renderBooks(allBooks);
     });
-
     document.getElementById('searchInput').addEventListener('input', (e) => {
         const query = e.target.value.trim().toLowerCase();
         if (!query) { renderBooks(allBooks); return; }
@@ -358,7 +313,6 @@ function initEventListeners() {
     document.getElementById('backBtn').addEventListener('click', () => {
         window.location.hash = '#home';
     });
-
     document.getElementById('adminBackBtn').addEventListener('click', () => {
         window.location.hash = '#home';
     });
@@ -401,32 +355,14 @@ function initEventListeners() {
         renderIcons(activeTab, q);
     });
 
-    document.getElementById('saveFbLinkBtn').addEventListener('click', async () => {
-        const link = document.getElementById('globalFacebookLink').value.trim();
-        try {
-            await set(ref(db, 'settings/facebookLink'), link);
-            showToast('تم حفظ لينك الفيسبوك بنجاح!', 'success');
-        } catch (err) {
-            showToast('حصل مشكلة: ' + err.message, 'error');
-        }
-    });
-
     document.getElementById('bookForm').addEventListener('submit', handleBookSubmit);
+
     document.getElementById('selectAllBtn').addEventListener('click', toggleSelectAll);
     document.getElementById('deleteSelectedBtn').addEventListener('click', deleteSelected);
 
-    document.getElementById('privacyBackBtn').addEventListener('click', () => {
-        window.history.back();
-    });
-    document.getElementById('howToUseBackBtn').addEventListener('click', () => {
-        window.history.back();
-    });
-    document.getElementById('downloadBackBtn').addEventListener('click', () => {
-        window.history.back();
-    });
-    document.getElementById('downloadDoneClose').addEventListener('click', () => {
-        window.history.back();
-    });
+    document.getElementById('downloadModalClose').addEventListener('click', closeDownloadModal);
+    document.getElementById('step1Next').addEventListener('click', () => goToDownloadStep(2));
+    document.getElementById('step2Next').addEventListener('click', () => goToDownloadStep(3));
 
     document.getElementById('confirmDeleteNo').addEventListener('click', closeConfirmDelete);
 
@@ -443,12 +379,6 @@ function loadBooks() {
         allBooks = snapshot.val() || {};
         renderBooks(allBooks);
     });
-}
-
-function getBookImage(book, index) {
-    const cat = book.category || 'general';
-    const images = CATEGORY_IMAGES[cat] || CATEGORY_IMAGES.general;
-    return images[index % images.length];
 }
 
 function renderBooks(books) {
@@ -471,18 +401,16 @@ function renderBooks(books) {
     filtered.forEach(([id, book], index) => {
         const card = document.createElement('div');
         card.className = 'book-card';
-        card.style.animationDelay = `${index * 0.06}s`;
+        card.style.animationDelay = `${index * 0.05}s`;
         card.addEventListener('click', () => {
             window.location.hash = `#book/${id}`;
         });
 
         const catName = CATEGORIES[book.category]?.name || book.category;
         const coverColor = book.coverColor || '#6C5CE7';
-        const bgImage = getBookImage(book, index);
 
         card.innerHTML = `
             <div class="book-cover" style="background: linear-gradient(135deg, ${coverColor}, ${adjustColor(coverColor, -30)})">
-                <div class="book-cover-image" style="background-image: url('${bgImage}')"></div>
                 <span class="book-cover-category">${catName}</span>
                 <i class="${book.icon || 'fas fa-book'} book-cover-icon"></i>
                 <span class="book-cover-title">${book.title}</span>
@@ -513,14 +441,11 @@ function showBookDetail(bookId) {
     const coverColor = book.coverColor || '#6C5CE7';
     const siteUrl = window.location.origin + window.location.pathname;
     const bookLink = `${siteUrl}#book/${bookId}`;
-    const bgImage = CATEGORIES[book.category]?.image || CATEGORY_IMAGES.general[0];
 
     content.innerHTML = `
         <div class="book-detail-3d">
             <div class="book-3d-wrapper">
                 <div class="book-3d-front" style="background: linear-gradient(135deg, ${coverColor}, ${adjustColor(coverColor, -40)})">
-                    <div class="book-3d-bg-image" style="background-image: url('${bgImage}')"></div>
-                    <div class="book-3d-overlay"></div>
                     <i class="${book.icon || 'fas fa-book'} book-3d-icon"></i>
                     <span class="book-3d-title">${book.title}</span>
                 </div>
@@ -528,18 +453,18 @@ function showBookDetail(bookId) {
             </div>
         </div>
         <div class="book-detail-info">
-            <h2 class="book-detail-title animate-text">${book.title}</h2>
+            <h2 class="book-detail-title">${book.title}</h2>
             ${book.author ? `
-                <div class="book-detail-author animate-text delay-1">
+                <div class="book-detail-author">
                     <i class="fas fa-user-pen"></i> ${book.author}
                 </div>
             ` : ''}
-            <div class="book-detail-meta animate-text delay-2">
+            <div class="book-detail-meta">
                 <span class="meta-tag"><i class="fas fa-folder"></i> ${catName}</span>
                 ${subCatName ? `<span class="meta-tag"><i class="fas fa-tag"></i> ${subCatName}</span>` : ''}
             </div>
             ${book.description ? `
-                <div class="book-detail-desc animate-text delay-2">${book.description}</div>
+                <div class="book-detail-desc">${book.description}</div>
             ` : ''}
             <div class="book-detail-actions">
                 <button class="action-btn download-action-btn" id="downloadBookBtn">
@@ -557,7 +482,7 @@ function showBookDetail(bookId) {
     `;
 
     document.getElementById('downloadBookBtn').addEventListener('click', () => {
-        window.location.hash = `#download/${bookId}`;
+        openDownloadModal(book);
     });
 
     document.getElementById('shareBookBtn').addEventListener('click', () => {
@@ -595,39 +520,67 @@ function shareBook(book, link) {
 }
 
 let currentDownloadBook = null;
-let downloadTimerTimeout = null;
+let adTimerInterval = null;
 
-function openDownloadPage(bookId) {
-    const book = allBooks[bookId];
-    if (!book) {
-        window.location.hash = '#home';
-        return;
-    }
-    showView('downloadView');
+function openDownloadModal(book) {
     currentDownloadBook = book;
-    
-    const fbLink = globalSettings.facebookLink || '#';
-    const fbBtn = document.getElementById('fbFollowLink');
-    fbBtn.href = fbLink;
-    
-    document.querySelectorAll('.download-step').forEach(s => s.classList.add('hidden'));
-    document.getElementById('downloadStep1').classList.remove('hidden');
-    
-    // reset click handler to avoid duplicates
-    fbBtn.onclick = () => {
-        document.querySelectorAll('.download-step').forEach(s => s.classList.add('hidden'));
-        document.getElementById('downloadStep2').classList.remove('hidden');
-        
-        clearTimeout(downloadTimerTimeout);
-        downloadTimerTimeout = setTimeout(() => {
-            document.querySelectorAll('.download-step').forEach(s => s.classList.add('hidden'));
-            document.getElementById('downloadStep3').classList.remove('hidden');
-            
-            if (currentDownloadBook && currentDownloadBook.downloadLink) {
-                window.open(currentDownloadBook.downloadLink, '_blank');
+    const modal = document.getElementById('downloadModal');
+    modal.classList.remove('hidden');
+    document.body.classList.add('modal-open');
+
+    const fbLink = document.getElementById('facebookPageLink');
+    fbLink.href = book.facebookPageLink || 'https://facebook.com';
+
+    goToDownloadStep(1);
+}
+
+function closeDownloadModal() {
+    document.getElementById('downloadModal').classList.add('hidden');
+    document.body.classList.remove('modal-open');
+    clearInterval(adTimerInterval);
+    currentDownloadBook = null;
+}
+
+function goToDownloadStep(step) {
+    document.querySelectorAll('.download-step').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.step-dot').forEach(d => d.classList.remove('active'));
+
+    document.getElementById(`downloadStep${step}`).classList.add('active');
+    document.querySelector(`.step-dot[data-step="${step}"]`).classList.add('active');
+
+    if (step === 3) {
+        startAdCountdown();
+    }
+}
+
+function startAdCountdown() {
+    const timerEl = document.getElementById('adTimer');
+    const progressBar = document.getElementById('adProgressBar');
+    const adContainer = document.getElementById('adContainer');
+    const downloadReady = document.getElementById('downloadReady');
+    let seconds = 10;
+
+    adContainer.style.display = '';
+    downloadReady.classList.add('hidden');
+    progressBar.style.width = '0%';
+    timerEl.textContent = seconds;
+
+    clearInterval(adTimerInterval);
+    adTimerInterval = setInterval(() => {
+        seconds--;
+        timerEl.textContent = seconds;
+        progressBar.style.width = `${((10 - seconds) / 10) * 100}%`;
+
+        if (seconds <= 0) {
+            clearInterval(adTimerInterval);
+            adContainer.style.display = 'none';
+            downloadReady.classList.remove('hidden');
+
+            if (currentDownloadBook) {
+                document.getElementById('finalDownloadLink').href = currentDownloadBook.downloadLink || '#';
             }
-        }, 5000);
-    };
+        }
+    }, 1000);
 }
 
 function updateSubcategories(category) {
@@ -698,6 +651,7 @@ async function handleBookSubmit(e) {
     const author = document.getElementById('bookAuthor').value.trim();
     const description = document.getElementById('bookDescription').value.trim();
     const downloadLink = document.getElementById('bookLink').value.trim();
+    const facebookPageLink = document.getElementById('facebookLink').value.trim();
     const category = document.getElementById('bookCategory').value;
     const subcategory = document.getElementById('bookSubcategory').value;
     const icon = document.getElementById('bookIcon').value;
@@ -713,6 +667,7 @@ async function handleBookSubmit(e) {
         author,
         description,
         downloadLink,
+        facebookPageLink,
         category,
         subcategory,
         icon,
@@ -857,6 +812,7 @@ function editBook(id, book) {
     document.getElementById('bookAuthor').value = book.author || '';
     document.getElementById('bookDescription').value = book.description || '';
     document.getElementById('bookLink').value = book.downloadLink || '';
+    document.getElementById('facebookLink').value = book.facebookPageLink || '';
     document.getElementById('bookCategory').value = book.category || '';
     updateSubcategories(book.category);
     document.getElementById('bookSubcategory').value = book.subcategory || '';
