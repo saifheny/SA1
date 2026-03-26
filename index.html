@@ -3,26 +3,34 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>مكتبتي | BookStore</title>
-    <meta name="description" content="مكتبة إلكترونية لتحميل كتب البرمجة والقصص">
-    <meta name="theme-color" content="#000000">
+    <title>مكتبة الكتب | BookStore</title>
+    <meta name="description" content="مكتبة إلكترونية لتحميل كتب البرمجة والقصص - كتب بايثون، جافاسكريبت، ذكاء اصطناعي والمزيد">
+    <meta name="theme-color" content="#0a0a1a">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <meta property="og:title" content="مكتبتي | BookStore">
-    <meta property="og:description" content="مكتبة إلكترونية لتحميل كتب البرمجة والقصص">
-    <meta property="og:image" content="https://images.unsplash.com/photo-1524578271613-d550eacf6090?w=1200&q=80">
-    <meta property="og:type" content="website">
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22><path fill=%22%23ffffff%22 d=%22M256 160c-52.9 0-96-43.1-96-96s43.1-96 96-96 96 43.1 96 96-43.1 96-96 96zm246 122.9C483 273.6 462.6 264 439.8 264H384c-35.3 0-64-28.7-64-64V170.7c0-11-9-20-20-20h-88c-11 0-20 9-20 20V200c0 35.3-28.7 64-64 64H72.2C49.4 264 29 273.6 10 282.9c-10 4.9-10 19.3 0 24.2C29 316.4 49.4 326 72.2 326H128c35.3 0 64 28.7 64 64v29.3c0 11 9 20 20 20h88c11 0 20-9 20-20V390c0-35.3 28.7-64 64-64h55.8c22.8 0 43.2-9.6 62.2-18.9 10-4.9 10-19.3 0-24.2z%22/></svg>" type="image/svg+xml">
-    <link rel="stylesheet" href="style (43).css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    
     <canvas id="particlesCanvas"></canvas>
+
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-book">
+            <div class="loading-page"></div>
+            <div class="loading-page"></div>
+            <div class="loading-page"></div>
+        </div>
+        <p class="loading-text">جاري التحميل...</p>
+    </div>
+
     <div id="toast" class="toast"></div>
+
     <main id="app">
+        
         <header id="mainHeader" class="app-header">
             <div class="header-content">
                 <div class="logo" id="logoArea">
@@ -43,15 +51,9 @@
                 </button>
             </div>
         </header>
+
         <section id="homeView" class="view active">
-            <div class="hero-section">
-                <div class="hero-bg-image"></div>
-                <div class="hero-overlay"></div>
-                <div class="hero-text">
-                    <h2 class="animate-text">مكتبتك الإلكترونية</h2>
-                    <p class="animate-text delay-1">اكتشف أفضل كتب البرمجة والذكاء الاصطناعي والقصص</p>
-                </div>
-            </div>
+            
             <div class="category-filters" id="categoryFilters">
                 <button class="filter-pill active" data-category="all">
                     <i class="fas fa-layer-group"></i> الكل
@@ -69,18 +71,25 @@
                     <i class="fas fa-globe"></i> عام
                 </button>
             </div>
-            <div id="booksGrid" class="books-grid"></div>
+
+            <div id="booksGrid" class="books-grid">
+                
+            </div>
             <div id="emptyState" class="empty-state hidden">
                 <i class="fas fa-book-open empty-icon"></i>
-                <p class="animate-text">مفيش كتب لسه... ضيف كتب من لوحة التحكم</p>
+                <p>مفيش كتب لسه... ضيف كتب من لوحة التحكم</p>
             </div>
         </section>
+
         <section id="bookDetailView" class="view">
             <button id="backBtn" class="back-btn">
                 <i class="fas fa-arrow-right"></i> رجوع
             </button>
-            <div id="bookDetailContent" class="book-detail-content"></div>
+            <div id="bookDetailContent" class="book-detail-content">
+                
+            </div>
         </section>
+
         <section id="adminView" class="view">
             <div class="admin-header">
                 <button id="adminBackBtn" class="back-btn">
@@ -90,15 +99,7 @@
                     <i class="fas fa-cog"></i> لوحة التحكم
                 </h2>
             </div>
-            <div class="global-fb-setting">
-                <label><i class="fab fa-facebook"></i> لينك صفحة الفيسبوك الرئيسية</label>
-                <div class="fb-link-row">
-                    <input type="url" id="globalFacebookLink" placeholder="https://facebook.com/yourpage" dir="ltr">
-                    <button type="button" id="saveFbLinkBtn" class="white-btn small-btn">
-                        <i class="fas fa-save"></i> حفظ
-                    </button>
-                </div>
-            </div>
+
             <div class="admin-tabs">
                 <button class="admin-tab active" data-tab="addBook">
                     <i class="fas fa-plus-circle"></i> إضافة كتاب
@@ -107,24 +108,34 @@
                     <i class="fas fa-list"></i> كتبي
                 </button>
             </div>
+
             <div id="addBookTab" class="admin-tab-content active">
                 <form id="bookForm" class="book-form">
                     <input type="hidden" id="editBookId" value="">
+
                     <div class="form-group">
                         <label for="bookTitle"><i class="fas fa-heading"></i> اسم الكتاب</label>
                         <input type="text" id="bookTitle" required placeholder="ادخل اسم الكتاب">
                     </div>
+
                     <div class="form-group">
                         <label for="bookAuthor"><i class="fas fa-user-pen"></i> المؤلف</label>
                         <input type="text" id="bookAuthor" placeholder="اسم المؤلف">
                     </div>
+
                     <div class="form-group">
                         <label for="bookDescription"><i class="fas fa-align-right"></i> وصف الكتاب</label>
                         <textarea id="bookDescription" rows="4" placeholder="اكتب وصف مختصر للكتاب..."></textarea>
                     </div>
+
                     <div class="form-group">
                         <label for="bookLink"><i class="fas fa-link"></i> لينك تحميل الكتاب</label>
                         <input type="url" id="bookLink" required placeholder="https://...">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="facebookLink"><i class="fab fa-facebook"></i> لينك صفحة الفيسبوك</label>
+                        <input type="url" id="facebookLink" placeholder="https://facebook.com/...">
                     </div>
 
                     <div class="form-group">
@@ -137,12 +148,14 @@
                             <option value="general">عام</option>
                         </select>
                     </div>
+
                     <div class="form-group">
                         <label for="bookSubcategory"><i class="fas fa-folder-tree"></i> التصنيف الفرعي</label>
                         <select id="bookSubcategory">
                             <option value="">اختار التصنيف الفرعي</option>
                         </select>
                     </div>
+
                     <div class="form-group">
                         <label><i class="fas fa-palette"></i> لون غلاف الكتاب</label>
                         <div class="color-picker">
@@ -154,12 +167,11 @@
                             <button type="button" class="color-swatch" data-color="#E84393" style="background:#E84393"></button>
                             <button type="button" class="color-swatch" data-color="#00CEC9" style="background:#00CEC9"></button>
                             <button type="button" class="color-swatch" data-color="#A29BFE" style="background:#A29BFE"></button>
-                            <button type="button" class="color-swatch" data-color="#FFFFFF" style="background:#FFFFFF"></button>
-                            <button type="button" class="color-swatch" data-color="#1a1a2e" style="background:#1a1a2e; border: 1px solid #333"></button>
-                            <button type="button" class="color-swatch" data-color="#2d3436" style="background:#2d3436"></button>
-                            <button type="button" class="color-swatch" data-color="#636e72" style="background:#636e72"></button>
+                            <button type="button" class="color-swatch" data-color="#FF7675" style="background:#FF7675"></button>
+                            <button type="button" class="color-swatch" data-color="#55EFC4" style="background:#55EFC4"></button>
                         </div>
                     </div>
+
                     <div class="form-group">
                         <label><i class="fas fa-icons"></i> أيقونة الكتاب</label>
                         <div class="icon-picker-trigger" id="iconPickerTrigger">
@@ -169,11 +181,13 @@
                         </div>
                         <input type="hidden" id="bookIcon" value="fas fa-book">
                     </div>
+
                     <button type="submit" class="submit-btn" id="submitBtn">
                         <i class="fas fa-plus-circle"></i> إضافة الكتاب
                     </button>
                 </form>
             </div>
+
             <div id="myBooksTab" class="admin-tab-content">
                 <div class="my-books-controls">
                     <button id="selectAllBtn" class="control-btn">
@@ -183,19 +197,24 @@
                         <i class="fas fa-trash-alt"></i> حذف المحدد
                     </button>
                 </div>
-                <div id="myBooksList" class="my-books-list"></div>
+                <div id="myBooksList" class="my-books-list">
+                    
+                </div>
                 <div id="myBooksEmpty" class="empty-state hidden">
                     <i class="fas fa-inbox empty-icon"></i>
                     <p>مفيش كتب مضافة لسه</p>
                 </div>
             </div>
         </section>
+
         <div id="iconPickerModal" class="modal hidden">
             <div class="modal-overlay"></div>
             <div class="modal-content icon-picker-content">
                 <div class="modal-header">
                     <h3><i class="fas fa-icons"></i> اختار أيقونة</h3>
-                    <button class="modal-close" id="iconPickerClose"><i class="fas fa-times"></i></button>
+                    <button class="modal-close" id="iconPickerClose">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
                 <div class="icon-search-wrap">
                     <i class="fas fa-search"></i>
@@ -210,65 +229,76 @@
                     <button class="icon-cat-tab" data-cat="design">تصميم</button>
                     <button class="icon-cat-tab" data-cat="misc">متنوع</button>
                 </div>
-                <div class="icon-grid" id="iconGrid"></div>
+                <div class="icon-grid" id="iconGrid">
+                    
+                </div>
             </div>
         </div>
-        
-        <section id="privacyPolicyView" class="view">
-            <button id="privacyBackBtn" class="back-btn">
-                <i class="fas fa-arrow-right"></i> رجوع
-            </button>
-            <div class="page-content">
-                <h2>سياسة الخصوصية</h2>
-                <p>نحن نحترم خصوصيتك. المعلومات التي نجمعها تستخدم فقط لتحسين تجربتك في الموقع ولا يتم مشاركتها مع أطراف ثالثة.</p>
-                <p>يتم استخدام الكوكيز فقط لتحسين أداء الموقع.</p>
-            </div>
-        </section>
 
-        <section id="howToUseView" class="view">
-            <button id="howToUseBackBtn" class="back-btn">
-                <i class="fas fa-arrow-right"></i> رجوع
-            </button>
-            <div class="page-content">
-                <h2>كيفية الاستخدام</h2>
-                <p>تصفح الكتب المتاحة عبر الأقسام. للتحميل، اضغط على الكتاب المطلوب rồi اضغط على زر التحميل، بعد متابعة الصفحة سيتم تحويلك إلى رابط التحميل.</p>
-            </div>
-        </section>
+        <div id="downloadModal" class="modal hidden">
+            <div class="modal-overlay"></div>
+            <div class="modal-content download-modal-content">
+                <button class="modal-close" id="downloadModalClose">
+                    <i class="fas fa-times"></i>
+                </button>
 
-        <section id="downloadView" class="view">
-            <button id="downloadBackBtn" class="back-btn">
-                <i class="fas fa-arrow-right"></i> رجوع
-            </button>
-            <div class="download-page-content">
                 <div id="downloadStep1" class="download-step active">
-                    <div class="download-icon-wrap fb-icon-wrap">
+                    <div class="step-icon">
                         <i class="fab fa-facebook-f"></i>
                     </div>
-                    <h3 class="animate-text">تابع صفحتنا على فيسبوك</h3>
-                    <p class="animate-text delay-1">عشان تقدر تحمل الكتاب، لازم تتابع صفحتنا الأول</p>
-                    <a id="fbFollowLink" href="#" target="_blank" class="white-btn fb-follow-btn">
+                    <h3>تابع صفحتنا على فيسبوك</h3>
+                    <p>عشان تقدر تحمل الكتاب، تابع صفحتنا الأول</p>
+                    <a id="facebookPageLink" href="#" target="_blank" class="facebook-btn">
                         <i class="fab fa-facebook-f"></i> متابعة الصفحة
                     </a>
-                </div>
-                <div id="downloadStep2" class="download-step hidden">
-                    <div class="download-icon-wrap">
-                        <i class="fas fa-spinner fa-spin"></i>
-                    </div>
-                    <h3 class="animate-text">جاري بدء التحميل...</h3>
-                    <p class="download-hint animate-text delay-1">شوية وبيبدأ التحميل تلقائي، متقفلش الصفحة.</p>
-                </div>
-                <div id="downloadStep3" class="download-step hidden">
-                    <div class="download-done-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <h3 class="animate-text">تم بدء التحميل!</h3>
-                    <p class="animate-text delay-1">الكتاب بيتحمل دلوقتي</p>
-                    <button class="white-btn" id="downloadDoneClose">
-                        <i class="fas fa-arrow-right"></i> رجوع للكتاب
+                    <button id="step1Next" class="step-next-btn">
+                        <i class="fas fa-check"></i> تابعت الصفحة
                     </button>
                 </div>
+
+                <div id="downloadStep2" class="download-step">
+                    <div class="step-icon confirm-icon">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <h3>تمام! كده كويس</h3>
+                    <p>دلوقتي اضغط تحميل وهيبدأ يحمل</p>
+                    <button id="step2Next" class="download-btn-final">
+                        <i class="fas fa-download"></i> تحميل الكتاب
+                    </button>
+                </div>
+
+                <div id="downloadStep3" class="download-step">
+                    <div class="ad-container" id="adContainer">
+                        <div class="ad-overlay">
+                            <div class="ad-content">
+                                <i class="fas fa-ad ad-icon-big"></i>
+                                <p>الإعلان هيخلص كمان</p>
+                                <div class="ad-timer" id="adTimer">10</div>
+                                <div class="ad-progress">
+                                    <div class="ad-progress-bar" id="adProgressBar"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="downloadReady" class="download-ready hidden">
+                        <div class="step-icon success-icon">
+                            <i class="fas fa-cloud-download-alt"></i>
+                        </div>
+                        <h3>الكتاب جاهز!</h3>
+                        <a id="finalDownloadLink" href="#" target="_blank" class="download-btn-final success">
+                            <i class="fas fa-download"></i> حمّل دلوقتي
+                        </a>
+                    </div>
+                </div>
+
+                <div class="steps-indicator">
+                    <span class="step-dot active" data-step="1"></span>
+                    <span class="step-dot" data-step="2"></span>
+                    <span class="step-dot" data-step="3"></span>
+                </div>
             </div>
-        </section>
+        </div>
+
         <div id="confirmDeleteModal" class="modal hidden">
             <div class="modal-overlay"></div>
             <div class="modal-content confirm-modal-content">
@@ -278,29 +308,21 @@
                 <h3 id="confirmDeleteTitle">متأكد إنك عايز تحذف؟</h3>
                 <p id="confirmDeleteMsg">الحذف ده مش هيترجع تاني</p>
                 <div class="confirm-actions">
-                    <button id="confirmDeleteYes" class="white-btn danger-btn">
+                    <button id="confirmDeleteYes" class="confirm-btn danger">
                         <i class="fas fa-trash-alt"></i> أيوه، احذف
                     </button>
-                    <button id="confirmDeleteNo" class="white-btn outline-btn">
+                    <button id="confirmDeleteNo" class="confirm-btn cancel">
                         <i class="fas fa-times"></i> لأ، رجوع
                     </button>
                 </div>
             </div>
         </div>
     </main>
+
     <footer class="app-footer">
-        <div class="footer-links">
-            <a href="#privacyPolicy">سياسة الخصوصية</a>
-            <a href="#howToUse">كيفية الاستخدام</a>
-        </div>
-        <div class="social-icons">
-            <a href="#" class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>
-            <a href="#" class="social-icon linkedin"><i class="fab fa-linkedin-in"></i></a>
-            <a href="#" class="social-icon reddit"><i class="fab fa-reddit-alien"></i></a>
-            <a href="#" class="social-icon github"><i class="fab fa-github"></i></a>
-        </div>
         <p>© 2026 مكتبتي - كل الحقوق محفوظة</p>
     </footer>
+
     <script type="module" src="app.js"></script>
 </body>
 </html>
