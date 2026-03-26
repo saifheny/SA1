@@ -198,13 +198,45 @@ document.addEventListener('DOMContentLoaded', () => {
     loadSettings();
 });
 
+// ── Settings & Social Links ────────────────────────────────────
 function loadSettings() {
     onValue(settingsRef, (snapshot) => {
         globalSettings = snapshot.val() || {};
-        document.getElementById('globalFacebookLink').value = globalSettings.facebookLink || '';
+
+        // Populate admin inputs
+        const setVal = (id, key) => {
+            const el = document.getElementById(id);
+            if (el) el.value = globalSettings[key] || '';
+        };
+        setVal('globalFacebookLink', 'facebookLink');
+        setVal('globalLinkedinLink', 'linkedinLink');
+        setVal('globalRedditLink',   'redditLink');
+        setVal('globalGithubLink',   'githubLink');
+
+        // Update all social icon links across the page
+        updateSocialLinks();
     });
 }
 
+function updateSocialLinks() {
+    const map = [
+        { ids: ['footerFbLink', 'aboutFbLink'], key: 'facebookLink'  },
+        { ids: ['footerLiLink', 'aboutLiLink'], key: 'linkedinLink'  },
+        { ids: ['footerRdLink', 'aboutRdLink'], key: 'redditLink'    },
+        { ids: ['footerGhLink', 'aboutGhLink'], key: 'githubLink'    },
+    ];
+    map.forEach(({ ids, key }) => {
+        const href = globalSettings[key];
+        if (href) {
+            ids.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) { el.href = href; el.target = '_blank'; }
+            });
+        }
+    });
+}
+
+// ── Particles ─────────────────────────────────────────────────
 function initParticles() {
     const canvas = document.getElementById('particlesCanvas');
     const ctx = canvas.getContext('2d');
@@ -212,7 +244,7 @@ function initParticles() {
     const count = 30;
 
     function resize() {
-        canvas.width = Math.min(window.innerWidth, 480);
+        canvas.width  = Math.min(window.innerWidth, 480);
         canvas.height = window.innerHeight;
     }
     resize();
@@ -222,7 +254,7 @@ function initParticles() {
         particles.push({
             x: Math.random() * canvas.width,
             y: Math.random() * canvas.height,
-            size: Math.random() * 1.5 + 0.3,
+            size:   Math.random() * 1.5 + 0.3,
             speedX: (Math.random() - 0.5) * 0.2,
             speedY: (Math.random() - 0.5) * 0.2,
             opacity: Math.random() * 0.25 + 0.05
@@ -235,15 +267,14 @@ function initParticles() {
             p.x += p.speedX;
             p.y += p.speedY;
             if (p.x < 0) p.x = canvas.width;
-            if (p.x > canvas.width) p.x = 0;
+            if (p.x > canvas.width)  p.x = 0;
             if (p.y < 0) p.y = canvas.height;
             if (p.y > canvas.height) p.y = 0;
             ctx.beginPath();
             ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
+            ctx.fillStyle = `rgba(255,255,255,${p.opacity})`;
             ctx.fill();
         });
-
         particles.forEach((p1, i) => {
             particles.slice(i + 1).forEach(p2 => {
                 const dist = Math.hypot(p1.x - p2.x, p1.y - p2.y);
@@ -251,25 +282,25 @@ function initParticles() {
                     ctx.beginPath();
                     ctx.moveTo(p1.x, p1.y);
                     ctx.lineTo(p2.x, p2.y);
-                    ctx.strokeStyle = `rgba(255, 255, 255, ${0.04 * (1 - dist / 100)})`;
+                    ctx.strokeStyle = `rgba(255,255,255,${0.04 * (1 - dist / 100)})`;
                     ctx.lineWidth = 0.5;
                     ctx.stroke();
                 }
             });
         });
-
         requestAnimationFrame(animate);
     }
     animate();
 }
 
+// ── Router ─────────────────────────────────────────────────────
 function initRouter() {
     window.addEventListener('hashchange', handleRoute);
     handleRoute();
 }
 
 function handleRoute() {
-    const hash = window.location.hash || '#home';
+    const hash  = window.location.hash || '#home';
     const parts = hash.split('/');
     const route = parts[0];
 
@@ -285,6 +316,10 @@ function handleRoute() {
         showView('privacyPolicyView');
     } else if (route === '#howToUse') {
         showView('howToUseView');
+    } else if (route === '#terms') {
+        showView('termsView');
+    } else if (route === '#about') {
+        showView('aboutView');
     } else {
         showView('homeView');
     }
@@ -298,16 +333,20 @@ function showView(viewId) {
         view.style.animation = 'none';
         void view.offsetHeight;
         view.style.animation = '';
+        window.scrollTo(0, 0);
     }
-    if (viewId === 'homeView') currentView = 'home';
-    if (viewId === 'adminView') currentView = 'admin';
-    if (viewId === 'bookDetailView') currentView = 'detail';
+    currentView = viewId === 'homeView'  ? 'home'
+                : viewId === 'adminView' ? 'admin'
+                : viewId === 'bookDetailView' ? 'detail'
+                : viewId;
 
     const header = document.getElementById('mainHeader');
     header.style.display = viewId === 'homeView' ? '' : 'none';
 }
 
+// ── Event Listeners ────────────────────────────────────────────
 function initEventListeners() {
+    // Logo triple-tap → admin
     document.getElementById('logoArea').addEventListener('click', () => {
         adminTapCount++;
         clearTimeout(adminTapTimer);
@@ -318,6 +357,7 @@ function initEventListeners() {
         }
     });
 
+    // Search
     document.getElementById('searchToggle').addEventListener('click', () => {
         const bar = document.getElementById('searchBar');
         bar.classList.toggle('hidden');
@@ -346,6 +386,7 @@ function initEventListeners() {
         renderBooks(filtered);
     });
 
+    // Category filters
     document.getElementById('categoryFilters').addEventListener('click', (e) => {
         const pill = e.target.closest('.filter-pill');
         if (!pill) return;
@@ -355,14 +396,33 @@ function initEventListeners() {
         renderBooks(allBooks);
     });
 
+    // Back buttons
     document.getElementById('backBtn').addEventListener('click', () => {
         window.location.hash = '#home';
     });
-
     document.getElementById('adminBackBtn').addEventListener('click', () => {
         window.location.hash = '#home';
     });
+    document.getElementById('privacyBackBtn').addEventListener('click', () => {
+        window.history.back();
+    });
+    document.getElementById('howToUseBackBtn').addEventListener('click', () => {
+        window.history.back();
+    });
+    document.getElementById('downloadBackBtn').addEventListener('click', () => {
+        window.history.back();
+    });
+    document.getElementById('downloadDoneClose').addEventListener('click', () => {
+        window.history.back();
+    });
+    document.getElementById('termsBackBtn').addEventListener('click', () => {
+        window.history.back();
+    });
+    document.getElementById('aboutBackBtn').addEventListener('click', () => {
+        window.history.back();
+    });
 
+    // Admin tabs
     document.querySelectorAll('.admin-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
@@ -373,6 +433,7 @@ function initEventListeners() {
         });
     });
 
+    // Book form
     document.getElementById('bookCategory').addEventListener('change', (e) => {
         updateSubcategories(e.target.value);
     });
@@ -401,32 +462,31 @@ function initEventListeners() {
         renderIcons(activeTab, q);
     });
 
-    document.getElementById('saveFbLinkBtn').addEventListener('click', async () => {
-        const link = document.getElementById('globalFacebookLink').value.trim();
-        try {
-            await set(ref(db, 'settings/facebookLink'), link);
-            showToast('تم حفظ لينك الفيسبوك بنجاح!', 'success');
-        } catch (err) {
-            showToast('حصل مشكلة: ' + err.message, 'error');
-        }
+    // Social link save buttons (all 4)
+    document.querySelectorAll('.soc-save-btn').forEach(btn => {
+        btn.addEventListener('click', async () => {
+            const platform = btn.dataset.platform;
+            const inputMap = {
+                'facebookLink': 'globalFacebookLink',
+                'linkedinLink': 'globalLinkedinLink',
+                'redditLink':   'globalRedditLink',
+                'githubLink':   'globalGithubLink'
+            };
+            const inputId = inputMap[platform];
+            if (!inputId) return;
+            const link = document.getElementById(inputId).value.trim();
+            try {
+                await set(ref(db, `settings/${platform}`), link);
+                showToast('تم الحفظ بنجاح! ✓', 'success');
+            } catch (err) {
+                showToast('حصل مشكلة: ' + err.message, 'error');
+            }
+        });
     });
 
     document.getElementById('bookForm').addEventListener('submit', handleBookSubmit);
     document.getElementById('selectAllBtn').addEventListener('click', toggleSelectAll);
     document.getElementById('deleteSelectedBtn').addEventListener('click', deleteSelected);
-
-    document.getElementById('privacyBackBtn').addEventListener('click', () => {
-        window.history.back();
-    });
-    document.getElementById('howToUseBackBtn').addEventListener('click', () => {
-        window.history.back();
-    });
-    document.getElementById('downloadBackBtn').addEventListener('click', () => {
-        window.history.back();
-    });
-    document.getElementById('downloadDoneClose').addEventListener('click', () => {
-        window.history.back();
-    });
 
     document.getElementById('confirmDeleteNo').addEventListener('click', closeConfirmDelete);
 
@@ -438,6 +498,7 @@ function initEventListeners() {
     });
 }
 
+// ── Load Books ─────────────────────────────────────────────────
 function loadBooks() {
     onValue(booksRef, (snapshot) => {
         allBooks = snapshot.val() || {};
@@ -446,18 +507,18 @@ function loadBooks() {
 }
 
 function getBookImage(book, index) {
-    const cat = book.category || 'general';
+    const cat    = book.category || 'general';
     const images = CATEGORY_IMAGES[cat] || CATEGORY_IMAGES.general;
     return images[index % images.length];
 }
 
+// ── Render Books ───────────────────────────────────────────────
 function renderBooks(books) {
-    const grid = document.getElementById('booksGrid');
+    const grid  = document.getElementById('booksGrid');
     const empty = document.getElementById('emptyState');
     grid.innerHTML = '';
 
     let filtered = Object.entries(books);
-
     if (currentFilter !== 'all') {
         filtered = filtered.filter(([_, b]) => b.category === currentFilter);
     }
@@ -476,9 +537,9 @@ function renderBooks(books) {
             window.location.hash = `#book/${id}`;
         });
 
-        const catName = CATEGORIES[book.category]?.name || book.category;
+        const catName    = CATEGORIES[book.category]?.name || book.category;
         const coverColor = book.coverColor || '#6C5CE7';
-        const bgImage = getBookImage(book, index);
+        const bgImage    = getBookImage(book, index);
 
         card.innerHTML = `
             <div class="book-cover" style="background: linear-gradient(135deg, ${coverColor}, ${adjustColor(coverColor, -30)})">
@@ -493,6 +554,7 @@ function renderBooks(books) {
     });
 }
 
+// ── Book Detail ────────────────────────────────────────────────
 function showBookDetail(bookId) {
     showView('bookDetailView');
     const content = document.getElementById('bookDetailContent');
@@ -508,12 +570,12 @@ function showBookDetail(bookId) {
         return;
     }
 
-    const catName = CATEGORIES[book.category]?.name || book.category;
+    const catName    = CATEGORIES[book.category]?.name || book.category;
     const subCatName = CATEGORIES[book.category]?.subcategories?.[book.subcategory] || book.subcategory || '';
     const coverColor = book.coverColor || '#6C5CE7';
-    const siteUrl = window.location.origin + window.location.pathname;
-    const bookLink = `${siteUrl}#book/${bookId}`;
-    const bgImage = CATEGORIES[book.category]?.image || CATEGORY_IMAGES.general[0];
+    const siteUrl    = window.location.origin + window.location.pathname;
+    const bookLink   = `${siteUrl}#book/${bookId}`;
+    const bgImage    = CATEGORIES[book.category]?.image || CATEGORY_IMAGES.general[0];
 
     content.innerHTML = `
         <div class="book-detail-3d">
@@ -582,7 +644,6 @@ function shareBook(book, link) {
         text: `📚 ${book.title}${book.author ? ' - ' + book.author : ''}\nحمّل الكتاب من هنا:`,
         url: link
     };
-
     if (navigator.share) {
         navigator.share(shareData).catch(() => {});
     } else {
@@ -594,8 +655,26 @@ function shareBook(book, link) {
     }
 }
 
+// ── Download Flow ──────────────────────────────────────────────
 let currentDownloadBook = null;
 let downloadTimerTimeout = null;
+
+/**
+ * Helper: show a specific download step and hide all others.
+ * Manages both the `active` class (CSS display toggle) and
+ * the `hidden` utility class simultaneously.
+ */
+function showDownloadStep(stepId) {
+    document.querySelectorAll('.download-step').forEach(s => {
+        s.classList.remove('active');
+        s.classList.add('hidden');
+    });
+    const step = document.getElementById(stepId);
+    if (step) {
+        step.classList.remove('hidden');
+        step.classList.add('active');
+    }
+}
 
 function openDownloadPage(bookId) {
     const book = allBooks[bookId];
@@ -603,26 +682,34 @@ function openDownloadPage(bookId) {
         window.location.hash = '#home';
         return;
     }
+
     showView('downloadView');
     currentDownloadBook = book;
-    
+
+    // Set Facebook follow link
     const fbLink = globalSettings.facebookLink || '#';
-    const fbBtn = document.getElementById('fbFollowLink');
-    fbBtn.href = fbLink;
-    
-    document.querySelectorAll('.download-step').forEach(s => s.classList.add('hidden'));
-    document.getElementById('downloadStep1').classList.remove('hidden');
-    
-    // reset click handler to avoid duplicates
+    const fbBtn  = document.getElementById('fbFollowLink');
+    fbBtn.href   = fbLink;
+
+    // Clear any previous timer
+    if (downloadTimerTimeout) {
+        clearTimeout(downloadTimerTimeout);
+        downloadTimerTimeout = null;
+    }
+
+    // Reset to step 1
+    showDownloadStep('downloadStep1');
+
+    // Replace onclick to avoid stacking multiple handlers
     fbBtn.onclick = () => {
-        document.querySelectorAll('.download-step').forEach(s => s.classList.add('hidden'));
-        document.getElementById('downloadStep2').classList.remove('hidden');
-        
+        // Step 2: spinner (5-second silent wait)
+        showDownloadStep('downloadStep2');
+
         clearTimeout(downloadTimerTimeout);
         downloadTimerTimeout = setTimeout(() => {
-            document.querySelectorAll('.download-step').forEach(s => s.classList.add('hidden'));
-            document.getElementById('downloadStep3').classList.remove('hidden');
-            
+            // Step 3: done + auto-download
+            showDownloadStep('downloadStep3');
+
             if (currentDownloadBook && currentDownloadBook.downloadLink) {
                 window.open(currentDownloadBook.downloadLink, '_blank');
             }
@@ -630,10 +717,10 @@ function openDownloadPage(bookId) {
     };
 }
 
+// ── Admin Helpers ──────────────────────────────────────────────
 function updateSubcategories(category) {
     const subSelect = document.getElementById('bookSubcategory');
     subSelect.innerHTML = '<option value="">اختار التصنيف الفرعي</option>';
-
     if (CATEGORIES[category]) {
         Object.entries(CATEGORIES[category].subcategories).forEach(([key, name]) => {
             const opt = document.createElement('option');
@@ -693,15 +780,15 @@ function renderIcons(category, searchQuery = '') {
 async function handleBookSubmit(e) {
     e.preventDefault();
 
-    const editId = document.getElementById('editBookId').value;
-    const title = document.getElementById('bookTitle').value.trim();
-    const author = document.getElementById('bookAuthor').value.trim();
+    const editId      = document.getElementById('editBookId').value;
+    const title       = document.getElementById('bookTitle').value.trim();
+    const author      = document.getElementById('bookAuthor').value.trim();
     const description = document.getElementById('bookDescription').value.trim();
     const downloadLink = document.getElementById('bookLink').value.trim();
-    const category = document.getElementById('bookCategory').value;
+    const category    = document.getElementById('bookCategory').value;
     const subcategory = document.getElementById('bookSubcategory').value;
-    const icon = document.getElementById('bookIcon').value;
-    const coverColor = document.querySelector('.color-swatch.active')?.dataset.color || '#6C5CE7';
+    const icon        = document.getElementById('bookIcon').value;
+    const coverColor  = document.querySelector('.color-swatch.active')?.dataset.color || '#6C5CE7';
 
     if (!title || !downloadLink || !category) {
         showToast('كمّل البيانات المطلوبة', 'error');
@@ -709,14 +796,8 @@ async function handleBookSubmit(e) {
     }
 
     const bookData = {
-        title,
-        author,
-        description,
-        downloadLink,
-        category,
-        subcategory,
-        icon,
-        coverColor,
+        title, author, description, downloadLink,
+        category, subcategory, icon, coverColor,
         updatedAt: Date.now()
     };
 
@@ -742,8 +823,9 @@ async function handleBookSubmit(e) {
     }
 }
 
+// ── My Books (admin) ───────────────────────────────────────────
 function loadMyBooks() {
-    const list = document.getElementById('myBooksList');
+    const list  = document.getElementById('myBooksList');
     const empty = document.getElementById('myBooksEmpty');
     list.innerHTML = '';
     selectedBooks.clear();
@@ -787,12 +869,10 @@ function loadMyBooks() {
             e.stopPropagation();
             toggleBookSelect(id, item);
         });
-
         item.querySelector('.edit').addEventListener('click', (e) => {
             e.stopPropagation();
             editBook(id, book);
         });
-
         item.querySelector('.delete').addEventListener('click', (e) => {
             e.stopPropagation();
             confirmDelete([id]);
@@ -817,11 +897,10 @@ function toggleBookSelect(id, item) {
 }
 
 function toggleSelectAll() {
-    const items = document.querySelectorAll('.my-book-item');
+    const items      = document.querySelectorAll('.my-book-item');
     const allSelected = selectedBooks.size === items.length;
-
     items.forEach(item => {
-        const id = item.dataset.id;
+        const id       = item.dataset.id;
         const checkbox = item.querySelector('.my-book-checkbox');
         if (allSelected) {
             selectedBooks.delete(id);
@@ -852,15 +931,15 @@ function deleteSelected() {
 }
 
 function editBook(id, book) {
-    document.getElementById('editBookId').value = id;
-    document.getElementById('bookTitle').value = book.title || '';
-    document.getElementById('bookAuthor').value = book.author || '';
+    document.getElementById('editBookId').value      = id;
+    document.getElementById('bookTitle').value       = book.title       || '';
+    document.getElementById('bookAuthor').value      = book.author      || '';
     document.getElementById('bookDescription').value = book.description || '';
-    document.getElementById('bookLink').value = book.downloadLink || '';
-    document.getElementById('bookCategory').value = book.category || '';
+    document.getElementById('bookLink').value        = book.downloadLink || '';
+    document.getElementById('bookCategory').value   = book.category    || '';
     updateSubcategories(book.category);
     document.getElementById('bookSubcategory').value = book.subcategory || '';
-    document.getElementById('bookIcon').value = book.icon || 'fas fa-book';
+    document.getElementById('bookIcon').value        = book.icon        || 'fas fa-book';
     document.getElementById('selectedIconPreview').className = book.icon || 'fas fa-book';
 
     document.querySelectorAll('.color-swatch').forEach(s => {
@@ -868,7 +947,6 @@ function editBook(id, book) {
     });
 
     document.getElementById('submitBtn').innerHTML = '<i class="fas fa-pen"></i> تعديل الكتاب';
-
     document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
     document.querySelectorAll('.admin-tab-content').forEach(c => c.classList.remove('active'));
     document.querySelector('.admin-tab[data-tab="addBook"]').classList.add('active');
@@ -883,7 +961,7 @@ let deleteTargetIds = [];
 function confirmDelete(ids) {
     deleteTargetIds = ids;
     const modal = document.getElementById('confirmDeleteModal');
-    const msg = document.getElementById('confirmDeleteMsg');
+    const msg   = document.getElementById('confirmDeleteMsg');
 
     if (ids.length === 1) {
         const book = allBooks[ids[0]];
@@ -917,25 +995,23 @@ function closeConfirmDelete() {
     deleteTargetIds = [];
 }
 
+// ── Toast ──────────────────────────────────────────────────────
 function showToast(message, type = '') {
     const toast = document.getElementById('toast');
     let icon = '';
     if (type === 'success') icon = '<i class="fas fa-check-circle"></i>';
-    if (type === 'error') icon = '<i class="fas fa-exclamation-circle"></i>';
-
+    if (type === 'error')   icon = '<i class="fas fa-exclamation-circle"></i>';
     toast.className = `toast ${type}`;
     toast.innerHTML = `${icon} ${message}`;
     toast.classList.add('show');
-
-    setTimeout(() => {
-        toast.classList.remove('show');
-    }, 3000);
+    setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
+// ── Utilities ──────────────────────────────────────────────────
 function adjustColor(hex, amount) {
     hex = hex.replace('#', '');
     let r = Math.max(0, Math.min(255, parseInt(hex.substr(0, 2), 16) + amount));
     let g = Math.max(0, Math.min(255, parseInt(hex.substr(2, 2), 16) + amount));
     let b = Math.max(0, Math.min(255, parseInt(hex.substr(4, 2), 16) + amount));
-    return `#${r.toString(16).padStart(2, '0')}${g.toString(16).padStart(2, '0')}${b.toString(16).padStart(2, '0')}`;
+    return `#${r.toString(16).padStart(2,'0')}${g.toString(16).padStart(2,'0')}${b.toString(16).padStart(2,'0')}`;
 }
