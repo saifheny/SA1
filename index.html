@@ -12,7 +12,12 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="style.css">
+    <meta property="og:title" content="مكتبتي | BookStore">
+    <meta property="og:description" content="مكتبة إلكترونية لتحميل كتب البرمجة والقصص">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1524578271613-d550eacf6090?w=1200&q=80">
+    <meta property="og:type" content="website">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 512 512%22><path fill=%22%23ffffff%22 d=%22M256 160c-52.9 0-96-43.1-96-96s43.1-96 96-96 96 43.1 96 96-43.1 96-96 96zm246 122.9C483 273.6 462.6 264 439.8 264H384c-35.3 0-64-28.7-64-64V170.7c0-11-9-20-20-20h-88c-11 0-20 9-20 20V200c0 35.3-28.7 64-64 64H72.2C49.4 264 29 273.6 10 282.9c-10 4.9-10 19.3 0 24.2C29 316.4 49.4 326 72.2 326H128c35.3 0 64 28.7 64 64v29.3c0 11 9 20 20 20h88c11 0 20-9 20-20V390c0-35.3 28.7-64 64-64h55.8c22.8 0 43.2-9.6 62.2-18.9 10-4.9 10-19.3 0-24.2z%22/></svg>" type="image/svg+xml">
+    <link rel="stylesheet" href="style (43).css">
 </head>
 <body>
     <canvas id="particlesCanvas"></canvas>
@@ -208,40 +213,50 @@
                 <div class="icon-grid" id="iconGrid"></div>
             </div>
         </div>
-        <div id="downloadModal" class="modal hidden">
-            <div class="modal-overlay"></div>
-            <div class="modal-content download-modal-content">
-                <button class="back-to-top-btn" id="downloadBackBtn">
-                    <i class="fas fa-arrow-right"></i> رجوع
-                </button>
+        </section>
+        
+        <section id="privacyPolicyView" class="view">
+            <button id="privacyBackBtn" class="back-btn">
+                <i class="fas fa-arrow-right"></i> رجوع
+            </button>
+            <div class="page-content">
+                <h2>سياسة الخصوصية</h2>
+                <p>نحن نحترم خصوصيتك. المعلومات التي نجمعها تستخدم فقط لتحسين تجربتك في الموقع ولا يتم مشاركتها مع أطراف ثالثة.</p>
+                <p>يتم استخدام الكوكيز فقط لتحسين أداء الموقع.</p>
+            </div>
+        </section>
+
+        <section id="howToUseView" class="view">
+            <button id="howToUseBackBtn" class="back-btn">
+                <i class="fas fa-arrow-right"></i> رجوع
+            </button>
+            <div class="page-content">
+                <h2>كيفية الاستخدام</h2>
+                <p>تصفح الكتب المتاحة عبر الأقسام. للتحميل، اضغط على الكتاب المطلوب rồi اضغط على زر التحميل، بعد متابعة الصفحة سيتم تحويلك إلى رابط التحميل.</p>
+            </div>
+        </section>
+
+        <section id="downloadView" class="view">
+            <button id="downloadBackBtn" class="back-btn">
+                <i class="fas fa-arrow-right"></i> رجوع
+            </button>
+            <div class="download-page-content">
                 <div id="downloadStep1" class="download-step active">
                     <div class="download-icon-wrap fb-icon-wrap">
                         <i class="fab fa-facebook-f"></i>
                     </div>
                     <h3 class="animate-text">تابع صفحتنا على فيسبوك</h3>
-                    <p class="animate-text delay-1">عشان تقدر تحمل الكتاب، تابع صفحتنا الأول</p>
+                    <p class="animate-text delay-1">عشان تقدر تحمل الكتاب، لازم تتابع صفحتنا الأول</p>
                     <a id="fbFollowLink" href="#" target="_blank" class="white-btn fb-follow-btn">
-                        <i class="fab fa-facebook-f"></i> فتح صفحة الفيسبوك
+                        <i class="fab fa-facebook-f"></i> متابعة الصفحة
                     </a>
-                    <button id="fbFollowedBtn" class="white-btn outline-btn follow-done-btn">
-                        <i class="fas fa-check"></i> تابعت الصفحة
-                    </button>
                 </div>
                 <div id="downloadStep2" class="download-step hidden">
                     <div class="download-icon-wrap">
-                        <i class="fas fa-cloud-download-alt"></i>
+                        <i class="fas fa-spinner fa-spin"></i>
                     </div>
-                    <h3 class="animate-text">جاري تجهيز الكتاب...</h3>
-                    <div class="download-countdown">
-                        <div class="countdown-circle">
-                            <svg viewBox="0 0 100 100">
-                                <circle class="countdown-bg" cx="50" cy="50" r="45"></circle>
-                                <circle class="countdown-fill" id="countdownFill" cx="50" cy="50" r="45"></circle>
-                            </svg>
-                            <span class="countdown-number" id="countdownNumber">5</span>
-                        </div>
-                    </div>
-                    <p class="download-hint animate-text delay-1">هيبدأ التحميل تلقائياً بعد التأكد...</p>
+                    <h3 class="animate-text">جاري بدء التحميل...</h3>
+                    <p class="download-hint animate-text delay-1">شوية وبيبدأ التحميل تلقائي، متقفلش الصفحة.</p>
                 </div>
                 <div id="downloadStep3" class="download-step hidden">
                     <div class="download-done-icon">
@@ -253,13 +268,8 @@
                         <i class="fas fa-arrow-right"></i> رجوع للكتاب
                     </button>
                 </div>
-                <div class="steps-indicator">
-                    <span class="step-dot active" data-step="1"></span>
-                    <span class="step-dot" data-step="2"></span>
-                    <span class="step-dot" data-step="3"></span>
-                </div>
             </div>
-        </div>
+        </section>
         <div id="confirmDeleteModal" class="modal hidden">
             <div class="modal-overlay"></div>
             <div class="modal-content confirm-modal-content">
@@ -280,6 +290,16 @@
         </div>
     </main>
     <footer class="app-footer">
+        <div class="footer-links">
+            <a href="#privacyPolicy">سياسة الخصوصية</a>
+            <a href="#howToUse">كيفية الاستخدام</a>
+        </div>
+        <div class="social-icons">
+            <a href="#" class="social-icon facebook"><i class="fab fa-facebook-f"></i></a>
+            <a href="#" class="social-icon linkedin"><i class="fab fa-linkedin-in"></i></a>
+            <a href="#" class="social-icon reddit"><i class="fab fa-reddit-alien"></i></a>
+            <a href="#" class="social-icon github"><i class="fab fa-github"></i></a>
+        </div>
         <p>© 2026 مكتبتي - كل الحقوق محفوظة</p>
     </footer>
     <script type="module" src="app.js"></script>
