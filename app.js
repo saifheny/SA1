@@ -194,16 +194,15 @@ document.addEventListener('DOMContentLoaded', () => {
     initParticles();
     initRouter();
     initEventListeners();
+    initSmartHeader();
     loadBooks();
     loadSettings();
 });
 
-// ── Settings & Social Links ────────────────────────────────────
 function loadSettings() {
     onValue(settingsRef, (snapshot) => {
         globalSettings = snapshot.val() || {};
 
-        // Populate admin inputs
         const setVal = (id, key) => {
             const el = document.getElementById(id);
             if (el) el.value = globalSettings[key] || '';
@@ -213,7 +212,6 @@ function loadSettings() {
         setVal('globalRedditLink',   'redditLink');
         setVal('globalGithubLink',   'githubLink');
 
-        // Update all social icon links across the page
         updateSocialLinks();
     });
 }
@@ -236,7 +234,28 @@ function updateSocialLinks() {
     });
 }
 
-// ── Particles ─────────────────────────────────────────────────
+function initSmartHeader() {
+    const header = document.getElementById('mainHeader');
+    let lastScrollY = 0;
+    let ticking = false;
+
+    window.addEventListener('scroll', () => {
+        if (!ticking) {
+            requestAnimationFrame(() => {
+                const currentScrollY = window.scrollY;
+                if (currentScrollY > lastScrollY && currentScrollY > 80) {
+                    header.classList.add('header-hidden');
+                } else {
+                    header.classList.remove('header-hidden');
+                }
+                lastScrollY = currentScrollY;
+                ticking = false;
+            });
+            ticking = true;
+        }
+    });
+}
+
 function initParticles() {
     const canvas = document.getElementById('particlesCanvas');
     const ctx = canvas.getContext('2d');
@@ -244,7 +263,7 @@ function initParticles() {
     const count = 30;
 
     function resize() {
-        canvas.width  = Math.min(window.innerWidth, 480);
+        canvas.width  = window.innerWidth;
         canvas.height = window.innerHeight;
     }
     resize();
@@ -293,7 +312,6 @@ function initParticles() {
     animate();
 }
 
-// ── Router ─────────────────────────────────────────────────────
 function initRouter() {
     window.addEventListener('hashchange', handleRoute);
     handleRoute();
@@ -344,9 +362,7 @@ function showView(viewId) {
     header.style.display = viewId === 'homeView' ? '' : 'none';
 }
 
-// ── Event Listeners ────────────────────────────────────────────
 function initEventListeners() {
-    // Logo triple-tap → admin
     document.getElementById('logoArea').addEventListener('click', () => {
         adminTapCount++;
         clearTimeout(adminTapTimer);
@@ -357,7 +373,6 @@ function initEventListeners() {
         }
     });
 
-    // Search
     document.getElementById('searchToggle').addEventListener('click', () => {
         const bar = document.getElementById('searchBar');
         bar.classList.toggle('hidden');
@@ -386,7 +401,6 @@ function initEventListeners() {
         renderBooks(filtered);
     });
 
-    // Category filters
     document.getElementById('categoryFilters').addEventListener('click', (e) => {
         const pill = e.target.closest('.filter-pill');
         if (!pill) return;
@@ -396,7 +410,6 @@ function initEventListeners() {
         renderBooks(allBooks);
     });
 
-    // Back buttons
     document.getElementById('backBtn').addEventListener('click', () => {
         window.location.hash = '#home';
     });
@@ -422,7 +435,6 @@ function initEventListeners() {
         window.history.back();
     });
 
-    // Admin tabs
     document.querySelectorAll('.admin-tab').forEach(tab => {
         tab.addEventListener('click', () => {
             document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
@@ -433,7 +445,6 @@ function initEventListeners() {
         });
     });
 
-    // Book form
     document.getElementById('bookCategory').addEventListener('change', (e) => {
         updateSubcategories(e.target.value);
     });
@@ -462,7 +473,6 @@ function initEventListeners() {
         renderIcons(activeTab, q);
     });
 
-    // Social link save buttons (all 4)
     document.querySelectorAll('.soc-save-btn').forEach(btn => {
         btn.addEventListener('click', async () => {
             const platform = btn.dataset.platform;
@@ -498,7 +508,6 @@ function initEventListeners() {
     });
 }
 
-// ── Load Books ─────────────────────────────────────────────────
 function loadBooks() {
     onValue(booksRef, (snapshot) => {
         allBooks = snapshot.val() || {};
@@ -512,7 +521,6 @@ function getBookImage(book, index) {
     return images[index % images.length];
 }
 
-// ── Render Books ───────────────────────────────────────────────
 function renderBooks(books) {
     const grid  = document.getElementById('booksGrid');
     const empty = document.getElementById('emptyState');
@@ -554,7 +562,6 @@ function renderBooks(books) {
     });
 }
 
-// ── Book Detail ────────────────────────────────────────────────
 function showBookDetail(bookId) {
     showView('bookDetailView');
     const content = document.getElementById('bookDetailContent');
@@ -655,15 +662,9 @@ function shareBook(book, link) {
     }
 }
 
-// ── Download Flow ──────────────────────────────────────────────
 let currentDownloadBook = null;
 let downloadTimerTimeout = null;
 
-/**
- * Helper: show a specific download step and hide all others.
- * Manages both the `active` class (CSS display toggle) and
- * the `hidden` utility class simultaneously.
- */
 function showDownloadStep(stepId) {
     document.querySelectorAll('.download-step').forEach(s => {
         s.classList.remove('active');
@@ -686,28 +687,22 @@ function openDownloadPage(bookId) {
     showView('downloadView');
     currentDownloadBook = book;
 
-    // Set Facebook follow link
     const fbLink = globalSettings.facebookLink || '#';
     const fbBtn  = document.getElementById('fbFollowLink');
     fbBtn.href   = fbLink;
 
-    // Clear any previous timer
     if (downloadTimerTimeout) {
         clearTimeout(downloadTimerTimeout);
         downloadTimerTimeout = null;
     }
 
-    // Reset to step 1
     showDownloadStep('downloadStep1');
 
-    // Replace onclick to avoid stacking multiple handlers
     fbBtn.onclick = () => {
-        // Step 2: spinner (5-second silent wait)
         showDownloadStep('downloadStep2');
 
         clearTimeout(downloadTimerTimeout);
         downloadTimerTimeout = setTimeout(() => {
-            // Step 3: done + auto-download
             showDownloadStep('downloadStep3');
 
             if (currentDownloadBook && currentDownloadBook.downloadLink) {
@@ -717,7 +712,6 @@ function openDownloadPage(bookId) {
     };
 }
 
-// ── Admin Helpers ──────────────────────────────────────────────
 function updateSubcategories(category) {
     const subSelect = document.getElementById('bookSubcategory');
     subSelect.innerHTML = '<option value="">اختار التصنيف الفرعي</option>';
@@ -823,7 +817,6 @@ async function handleBookSubmit(e) {
     }
 }
 
-// ── My Books (admin) ───────────────────────────────────────────
 function loadMyBooks() {
     const list  = document.getElementById('myBooksList');
     const empty = document.getElementById('myBooksEmpty');
@@ -995,7 +988,6 @@ function closeConfirmDelete() {
     deleteTargetIds = [];
 }
 
-// ── Toast ──────────────────────────────────────────────────────
 function showToast(message, type = '') {
     const toast = document.getElementById('toast');
     let icon = '';
@@ -1007,7 +999,6 @@ function showToast(message, type = '') {
     setTimeout(() => toast.classList.remove('show'), 3000);
 }
 
-// ── Utilities ──────────────────────────────────────────────────
 function adjustColor(hex, amount) {
     hex = hex.replace('#', '');
     let r = Math.max(0, Math.min(255, parseInt(hex.substr(0, 2), 16) + amount));
