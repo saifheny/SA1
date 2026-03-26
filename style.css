@@ -202,7 +202,6 @@ body {
     background: linear-gradient(90deg, #fff, rgba(255,255,255,0.6), #fff);
     background-size: 200% auto;
     -webkit-background-clip: text;
-    background-clip: text;
     -webkit-text-fill-color: transparent;
     animation: shimmer 4s linear infinite;
 }
@@ -455,7 +454,6 @@ body {
     text-shadow: 0 2px 8px rgba(0,0,0,0.6);
     display: -webkit-box;
     -webkit-line-clamp: 2;
-    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
@@ -1497,183 +1495,12 @@ body {
 }
 
 .app-footer {
-    background: #050505;
-    border-top: 1px solid var(--border);
-    padding: 40px 20px 0;
-    margin-top: 40px;
+    text-align: center;
+    padding: 20px;
+    color: var(--text-muted);
+    font-size: 0.8rem;
     position: relative;
-    z-index: 10;
-}
-
-.footer-container {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    margin-bottom: 30px;
-}
-
-@media (min-width: 768px) {
-    .footer-container {
-        flex-direction: row;
-        justify-content: space-between;
-    }
-    .footer-col {
-        flex: 1;
-    }
-}
-
-.footer-logo {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: #fff;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 15px;
-}
-
-.footer-desc {
-    color: var(--text-muted);
-    font-size: 0.9rem;
-    line-height: 1.7;
-}
-
-.footer-title {
-    font-size: 1.1rem;
-    font-weight: 700;
-    color: #fff;
-    margin-bottom: 15px;
-}
-
-.footer-links {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.footer-link {
-    color: var(--text-secondary);
-    text-decoration: none;
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    transition: var(--transition);
-    font-size: 0.95rem;
-}
-
-.footer-link i {
-    font-size: 0.7rem;
-    color: var(--text-muted);
-    transition: var(--transition);
-}
-
-.footer-link:hover {
-    color: #fff;
-    transform: translateX(-5px);
-}
-
-.footer-link:hover i {
-    color: #fff;
-}
-
-.social-icons {
-    display: flex;
-    gap: 20px;
-    flex-wrap: wrap;
-    align-items: center;
-}
-
-.social-icon {
-    width: 45px;
-    height: 45px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: #fff;
-    font-size: 1.3rem;
-    text-decoration: none;
-    transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
-}
-
-.social-icon:hover {
-    transform: translateY(-5px) scale(1.1);
-}
-
-.social-icon.facebook { background: #1877F2; }
-.social-icon.facebook:hover { box-shadow: 0 5px 15px rgba(24, 119, 242, 0.4); }
-
-.social-icon.whatsapp { background: #25D366; }
-.social-icon.whatsapp:hover { box-shadow: 0 5px 15px rgba(37, 211, 102, 0.4); }
-
-.social-icon.github { background: #333333; }
-.social-icon.github:hover { box-shadow: 0 5px 15px rgba(255, 255, 255, 0.2); }
-
-.social-icon.linkedin { background: #0A66C2; }
-.social-icon.linkedin:hover { box-shadow: 0 5px 15px rgba(10, 102, 194, 0.4); }
-
-.footer-bottom {
-    text-align: center;
-    padding: 20px;
-    border-top: 1px solid rgba(255,255,255,0.05);
-    color: var(--text-muted);
-    font-size: 0.85rem;
-}
-
-/* Static Pages (Privacy, Terms, etc.) */
-.page-content {
-    padding: 20px;
-    animation: fadeInView 0.5s ease;
-    padding-bottom: 60px;
-}
-
-.page-header {
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-.page-icon {
-    font-size: 3rem;
-    color: #fff;
-    margin-bottom: 15px;
-    animation: floatIcon 3s ease-in-out infinite;
-}
-
-.page-header h2 {
-    font-size: 1.8rem;
-    font-weight: 800;
-}
-
-.text-content {
-    background: rgba(255, 255, 255, 0.03);
-    border: 1px solid var(--border);
-    border-radius: var(--radius-lg);
-    padding: 24px;
-    line-height: 1.8;
-    color: var(--text-secondary);
-}
-
-.text-content h3 {
-    color: #fff;
-    font-size: 1.2rem;
-    margin: 24px 0 12px;
-}
-
-.text-content p, .text-content ol {
-    margin-bottom: 16px;
-    font-size: 0.95rem;
-}
-
-.text-content li {
-    margin-bottom: 10px;
-    margin-right: 20px;
-}
-
-.view-back-btn {
-    margin: 15px 20px 0;
+    z-index: 1;
 }
 
 .hidden { display: none !important; }
